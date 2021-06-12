@@ -20,6 +20,7 @@ class _AccueilState extends State<Accueil> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView(
+        physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         children: [SectionNewProduct(), SectionPromoProduct()],
       ),
