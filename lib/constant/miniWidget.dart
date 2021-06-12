@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ob2a/data/internal.dart';
 
 import 'color.dart';
 
@@ -31,15 +33,60 @@ class MenuPrincipalElement extends StatefulWidget {
 class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {},
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Text(widget.menu['titre'],
-            style:
-                GoogleFonts.jost(color: pColor.withOpacity(0.8), fontSize: 18)),
-      ),
-    );
+    switch (widget.menu['titre']) {
+      case 'Catégorie':
+        return PopupMenuButton(
+            onSelected: (int e) {
+              print(e);
+              Get.toNamed('${CategorieItem[e.toInt()]['route']}');
+            },
+            tooltip: 'Choisir une catégorie',
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Text(widget.menu['titre'],
+                  style: GoogleFonts.jost(
+                      color: pColor.withOpacity(0.8), fontSize: 18)),
+            ),
+            itemBuilder: (BuildContext context) =>
+                CategorieItem.map((e) => PopupMenuItem(
+                      value: CategorieItem.indexOf(e),
+                      child: Text('${e['titre']}',
+                          style: GoogleFonts.roboto(fontSize: 16)),
+                    )).toList());
+      //  const PopupMenuDivider(),
+      //           const PopupMenuItem(child: Text('Item A')),
+      case 'Pages':
+        return PopupMenuButton(
+            tooltip: 'Allez vers une page',
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Text(widget.menu['titre'],
+                  style: GoogleFonts.jost(
+                      color: pColor.withOpacity(0.8), fontSize: 18)),
+            ),
+            itemBuilder: (BuildContext context) =>
+                PageItem.map((e) => PopupMenuItem(
+                      child: Text('${e['titre']}',
+                          style: GoogleFonts.roboto(fontSize: 16)),
+                    )).toList());
+      default:
+        return TextButton(
+          onPressed: () {
+            switch (widget.menu['titre']) {
+              case 'Accueil':
+                Get.toNamed('/');
+                break;
+              default:
+            }
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(widget.menu['titre'],
+                style: GoogleFonts.jost(
+                    color: pColor.withOpacity(0.8), fontSize: 18)),
+          ),
+        );
+    }
   }
 }
 
