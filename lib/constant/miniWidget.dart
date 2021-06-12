@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'color.dart';
 
 class Logo extends StatelessWidget {
   const Logo({Key? key}) : super(key: key);
@@ -14,5 +17,45 @@ class Logo extends StatelessWidget {
             fontSize: 30));
 
     //   Text('O\'B2A',
+  }
+}
+
+class MenuPrincipalElement extends StatefulWidget {
+  final menu;
+  MenuPrincipalElement({this.menu});
+
+  @override
+  _MenuPrincipalElementState createState() => _MenuPrincipalElementState();
+}
+
+class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {},
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Text(widget.menu['titre'],
+            style:
+                GoogleFonts.jost(color: pColor.withOpacity(0.8), fontSize: 18)),
+      ),
+    );
+  }
+}
+
+class ChargementDefault extends StatelessWidget {
+  const ChargementDefault({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: sColorLight,
+      child: Center(
+        child: SpinKitFadingCircle(
+          color: pColor,
+          size: 40.0,
+        ),
+      ),
+    );
   }
 }
