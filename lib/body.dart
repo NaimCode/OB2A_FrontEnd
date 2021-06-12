@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/data/internal.dart';
 import 'constant/miniWidget.dart';
@@ -107,7 +108,19 @@ class _BodyState extends State<Body> {
                 )),
                 pinned: true,
               ),
-        SliverList(delegate: SliverChildListDelegate([widget.content]))
+        SliverList(
+            delegate: SliverChildListDelegate([
+          widget.content,
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 30),
+            color: sColor,
+            child: Center(
+              child: Text('© 2021 O\'B2A',
+                  style: GoogleFonts.jost(
+                      fontSize: 18, fontWeight: FontWeight.w200)),
+            ),
+          )
+        ]))
       ],
     ));
   }
