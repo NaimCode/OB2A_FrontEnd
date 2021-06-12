@@ -1,12 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/data/internal.dart';
-import 'package:http/http.dart' as http;
 import 'constant/miniWidget.dart';
-import 'constant/widget.dart';
 
 class Body extends StatefulWidget {
   final content;
@@ -17,14 +12,6 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  List produits = [];
-  var futureGetProducts;
-  getProducts() async {
-    var url = Uri.parse('https://ob2a.herokuapp.com/produits?_limit=8');
-    var response = await http.get(url);
-    produits = jsonDecode(response.body);
-  }
-
   @override
   void initState() {
     super.initState();
