@@ -5,6 +5,7 @@ import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/data/internal.dart';
 import 'constant/miniWidget.dart';
 import 'responsive/desktop.dart';
+import 'responsive/mobile.dart';
 
 class Body extends StatefulWidget {
   final content;
@@ -24,23 +25,24 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     var isMobile = MediaQuery.of(context).size.width < 800;
     return Scaffold(
+        endDrawer: isMobile ? Drawer() : null,
         body: CustomScrollView(
-      slivers: [
-        isMobile ? SliverAppBar() : WebAppBar(),
-        SliverList(
-            delegate: SliverChildListDelegate([
-          widget.content,
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 30),
-            color: sColor,
-            child: Center(
-              child: Text('© 2021 O\'B2A',
-                  style: GoogleFonts.jost(
-                      fontSize: 18, fontWeight: FontWeight.w200)),
-            ),
-          )
-        ]))
-      ],
-    ));
+          slivers: [
+            isMobile ? MobileAppBar() : WebAppBar(),
+            SliverList(
+                delegate: SliverChildListDelegate([
+              widget.content,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 30),
+                color: sColor,
+                child: Center(
+                  child: Text('© 2021 O\'B2A',
+                      style: GoogleFonts.jost(
+                          fontSize: 18, fontWeight: FontWeight.w200)),
+                ),
+              )
+            ]))
+          ],
+        ));
   }
 }

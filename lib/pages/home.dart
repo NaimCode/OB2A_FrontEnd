@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,15 +20,139 @@ class Accueil extends StatefulWidget {
 class _AccueilState extends State<Accueil> {
   @override
   Widget build(BuildContext context) {
+    var isMobile = MediaQuery.of(context).size.width < 800;
     return Container(
       child: ListView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: isMobile ? NeverScrollableScrollPhysics() : null,
         shrinkWrap: true,
         children: [
+          Landing(),
           SectionCategorie(),
           SectionNewProduct(),
           SectionPromoProduct(),
           SectionCollection()
+        ],
+      ),
+    );
+  }
+}
+
+class Landing extends StatelessWidget {
+  const Landing({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var isMobile = MediaQuery.of(context).size.width < 800;
+    return Container(
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: sColorLight,
+                  //   gradient: LinearGradient(
+                  // begin: Alignment.bottomCenter,
+                  // end: Alignment.topCenter,
+                  // colors: [Colors.transparent, sColorLight],
+                  // )
+                ),
+                height:
+                    isMobile ? null : MediaQuery.of(context).size.height * 0.7,
+                child: Wrap(
+                  children: [
+                    Container(
+                      height: isMobile
+                          ? null
+                          : MediaQuery.of(context).size.height * (0.7),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 20 : 50,
+                        vertical: isMobile ? 40 : 0,
+                      ),
+                      width: isMobile
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width * 0.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: isMobile
+                            ? CrossAxisAlignment.center
+                            : CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'NOUVELLE EDITION NIKE 2021',
+                            style: GoogleFonts.jost(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            textAlign:
+                                isMobile ? TextAlign.center : TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Acheter dès maintenant avant la rupture du stock',
+                            style: GoogleFonts.jost(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                color: pColorLight),
+                            textAlign:
+                                isMobile ? TextAlign.center : TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(primary: pColor),
+                              onPressed: () {
+                                Get.toNamed('/produit/basket-homme-rouge');
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('Acheter',
+                                    style: GoogleFonts.jost(
+                                        fontWeight: FontWeight.w200,
+                                        color: Colors.white,
+                                        fontSize: 25)),
+                              ))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: isMobile
+                          ? null
+                          : MediaQuery.of(context).size.height * (0.7),
+                      width: isMobile
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width * 0.5,
+                      child: Image.asset(
+                        'images/heroImage.png',
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: [1, 2, 3, 4]
+          //         .map((e) => Card(
+          //             elevation: 6,
+          //             color: sColorLight,
+          //             child: Container(
+          //               height: 200,
+          //               width: 200,
+          //             )))
+          //         .toList(),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -76,7 +201,9 @@ class SectionCategorie extends StatelessWidget {
                       physics: NeverScrollableScrollPhysics(),
                       children: CategorieHome.map(
                         (e) => InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed('${e['route']}');
+                          },
                           child: Container(
                             margin: EdgeInsets.symmetric(
                                 vertical: isMobile ? 4 : 20,
@@ -123,7 +250,9 @@ class SectionCategorie extends StatelessWidget {
                             ),
                             height: isMobile ? 350 : 500,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Get.toNamed('${e['route']}');
+                              },
                               child: Column(
                                 children: [
                                   Expanded(

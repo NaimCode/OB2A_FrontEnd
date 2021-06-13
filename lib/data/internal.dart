@@ -83,17 +83,17 @@ const PageItem = [
 const CategorieHome = [
   {
     'image': 'images/womenFashion.png',
-    'route': '/categorie/femme',
+    'route': '/produits/femme?type=categorie',
     'titre': 'Femme'
   },
   {
     'image': 'images/menfashion.png',
-    'route': '/categorie/homme',
+    'route': '/produits/homme?type=categorie',
     'titre': 'Homme'
   },
   {
     'image': 'images/kidFashion.png',
-    'route': '/categorie/enfant',
+    'route': '/produits/enfant?type=categorie',
     'titre': 'Enfant'
   }
 ];
