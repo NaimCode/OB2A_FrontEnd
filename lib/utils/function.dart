@@ -49,3 +49,13 @@ getQueryUrl(var s) {
   return '?${s['query']}=${s['value']}';
   // Get.toNamed('/produit?recherche=$s');
 }
+
+getTitle(String s, int i, var l) {
+  switch (s) {
+    case 'enPromotion':
+      return 'PROMOTION';
+    case 'titre_contains':
+      return '$i produit(s) trouvés pour: ${getStringFromUrl(l)}';
+    default:
+  }
+}

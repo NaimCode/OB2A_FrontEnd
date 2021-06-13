@@ -27,7 +27,7 @@ class _ProduitsState extends State<Produits> {
             .get(Uri.parse('$API_URL/produits${getQueryUrl(Get.parameters)}')),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Container(height: 400, child: ChargementDefault());
+            return Container(height: 600, child: ChargementDefault());
           var produits = [];
           if (snapshot.hasData) {
             produits = jsonDecode(snapshot.data!.body);
@@ -40,30 +40,40 @@ class _ProduitsState extends State<Produits> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Container(
-                                color: pColorLight.withOpacity(0.4),
-                                height: 2)),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8, right: 8, bottom: 8),
-                          child: SelectableText(
-                            '${produits.length} produit(s) trouvés pour: ${getStringFromUrl(Get.parameters['value'])}',
+                    isMobile
+                        ? SelectableText(
+                            getTitle('${Get.parameters['query']}',
+                                produits.length, Get.parameters['value']),
                             style: GoogleFonts.jost(
                                 fontWeight: FontWeight.w300,
                                 fontSize: isMobile ? 25 : 40,
                                 wordSpacing: 2),
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                      color: pColorLight.withOpacity(0.4),
+                                      height: 2)),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 8, bottom: 8),
+                                child: SelectableText(
+                                  getTitle('${Get.parameters['query']}',
+                                      produits.length, Get.parameters['value']),
+                                  style: GoogleFonts.jost(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: isMobile ? 25 : 40,
+                                      wordSpacing: 2),
+                                ),
+                              ),
+                              Expanded(
+                                  child: Container(
+                                      color: pColorLight.withOpacity(0.4),
+                                      height: 2)),
+                            ],
                           ),
-                        ),
-                        Expanded(
-                            child: Container(
-                                color: pColorLight.withOpacity(0.4),
-                                height: 2)),
-                      ],
-                    ),
                     SizedBox(
                       height: 30,
                     ),

@@ -56,6 +56,9 @@ class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
       //           const PopupMenuItem(child: Text('Item A')),
       case 'Pages':
         return PopupMenuButton(
+            onSelected: (int e) {
+              Get.toNamed('${PageItem[e.toInt()]['route']}');
+            },
             tooltip: 'Allez vers une page',
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -65,18 +68,14 @@ class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
             ),
             itemBuilder: (BuildContext context) =>
                 PageItem.map((e) => PopupMenuItem(
+                      value: PageItem.indexOf(e),
                       child: Text('${e['titre']}',
                           style: GoogleFonts.roboto(fontSize: 16)),
                     )).toList());
       default:
         return TextButton(
           onPressed: () {
-            switch (widget.menu['titre']) {
-              case 'Accueil':
-                Get.toNamed('/');
-                break;
-              default:
-            }
+            Get.toNamed(widget.menu['route']);
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 8),

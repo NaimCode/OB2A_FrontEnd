@@ -4,8 +4,8 @@ const MenuPrincipal = [
     'route': '/accueil',
   },
   {
-    'titre': 'Explorer',
-    'route': '/produits',
+    'titre': 'Promotion',
+    'route': '/produit?query=enPromotion&value=true',
   },
   {
     'titre': 'Catégorie',
