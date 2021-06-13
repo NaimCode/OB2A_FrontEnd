@@ -37,7 +37,6 @@ class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
       case 'Catégorie':
         return PopupMenuButton(
             onSelected: (int e) {
-              print(e);
               Get.toNamed('${CategorieItem[e.toInt()]['route']}');
             },
             tooltip: 'Choisir une catégorie',

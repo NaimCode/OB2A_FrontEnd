@@ -90,8 +90,8 @@ class SectionCategorie extends StatelessWidget {
                                 Expanded(
                                     child: Container(
                                   decoration: BoxDecoration(
-                                      color: sColor,
-                                      borderRadius: BorderRadius.circular(50)),
+                                    color: sColor,
+                                  ),
                                   width: double.infinity,
                                   child: Image.asset('${e['image']}',
                                       fit: BoxFit.cover),

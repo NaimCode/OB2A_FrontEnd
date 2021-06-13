@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 
@@ -102,7 +103,9 @@ class CardCollection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Get.toNamed('/produits/${e['slug']}?type=collection');
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         height: isMobile ? 150 : 200,

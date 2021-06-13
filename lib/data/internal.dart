@@ -19,43 +19,47 @@ const MenuPrincipal = [
 const CategorieItem = [
   {
     'titre': 'Accessoires',
-    'route': '/categories/accessoires',
+    'route': '/produits/accessoires?type=categorie',
   },
   {
     'titre': 'Beauté et Cosmétique',
-    'route': '/categories/beaute-et-cosmetique',
+    'route': '/produits/beaute-et-cosmetique?type=categorie',
   },
   {
     'titre': 'Enfant',
-    'route': '/categories/enfant',
+    'route': '/produits/enfant?type=categorie',
   },
   {
     'titre': 'Homme',
-    'route': '/categories/homme',
+    'route': '/produits/homme?type=categorie',
   },
   {
     'titre': 'Femme',
-    'route': '/categories/femme',
+    'route': '/produits/femme?type=categorie',
+  },
+  {
+    'titre': 'Santé',
+    'route': '/produits/sante?type=categorie',
   },
   {
     'titre': 'Numérique',
-    'route': '/categories/numerique',
+    'route': '/produits/numerique?type=categorie',
   },
   {
     'titre': 'Électroménagers',
-    'route': '/categories/electromenagers',
+    'route': '/produits/electromenagers?type=categorie',
   },
   {
     'titre': 'Épicerie',
-    'route': '/categories/epicerie',
+    'route': '/produits/epicerie?type=categorie',
   },
   {
     'titre': 'Maison',
-    'route': '/categories/maison',
+    'route': '/produits/maison?type=categorie',
   },
   {
     'titre': 'Autre',
-    'route': '/categories/autre',
+    'route': '/produits/autre?type=categorie',
   },
 ];
 const PageItem = [

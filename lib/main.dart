@@ -14,16 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: '/categories/femme',
+      initialRoute: '/produits/moins-de-10?type=collection',
       getPages: [
         GetPage(
             name: '/',
             page: () => Body(content: Accueil()),
             transition: Transition.cupertino),
         GetPage(
-            name: '/categories/:cat',
+            name: '/produits/:slug',
             page: () => Body(content: CategoriePage()),
-            transition: Transition.cupertino)
+            transition: Transition.cupertino),
       ],
       title: 'O\'B2A',
       theme: ThemeData(
