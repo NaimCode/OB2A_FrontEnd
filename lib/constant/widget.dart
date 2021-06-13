@@ -133,3 +133,74 @@ class CardCollection extends StatelessWidget {
     );
   }
 }
+
+class Search extends StatelessWidget {
+  const Search({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 356,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: pColor.withOpacity(0.7),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintStyle:
+                            TextStyle(color: Colors.grey.withOpacity(0.6)),
+                        contentPadding:
+                            EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        hintText: 'Recherche',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      tooltip: 'Recherche',
+                      onPressed: () {},
+                      icon: Icon(Icons.search_outlined, color: pColor)),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 3,
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3),
+              child: IconButton(
+                  tooltip: 'Profile',
+                  iconSize: 26,
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.person_outline_outlined,
+                    color: pColor,
+                  ))),
+          IconButton(
+              tooltip: 'Panier',
+              onPressed: () {},
+              icon: Icon(
+                Icons.shopping_basket_outlined,
+                color: pColor,
+              ))
+        ],
+      ),
+    );
+  }
+}

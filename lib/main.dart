@@ -4,6 +4,8 @@ import 'package:ob2a/pages/categorie.dart';
 
 import 'body.dart';
 import 'pages/home.dart';
+import 'pages/produits.dart';
+import 'pages/unknown.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,11 +16,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: '/produits/moins-de-10?type=collection',
+      initialRoute: '/',
+      unknownRoute:
+          GetPage(name: '/erreur404', page: () => Body(content: UnknownPage())),
       getPages: [
         GetPage(
             name: '/',
             page: () => Body(content: Accueil()),
+            transition: Transition.cupertino),
+        GetPage(
+            name: '/produit',
+            page: () => Body(content: Produits()),
             transition: Transition.cupertino),
         GetPage(
             name: '/produits/:slug',
