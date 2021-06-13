@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: '/produit/basket-homme',
+      initialRoute: '/',
       unknownRoute:
           GetPage(name: '/erreur404', page: () => Body(content: UnknownPage())),
       getPages: [

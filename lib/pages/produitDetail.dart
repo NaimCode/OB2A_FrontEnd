@@ -51,25 +51,32 @@ class _ProduitDetailState extends State<ProduitDetail> {
                       spacing: isMobile ? 0 : 20,
                       children: [
                         Container(
-                          height: MediaQuery.of(context).size.width < 1000
-                              ? produits[0]['image'].length == 1
-                                  ? 350
-                                  : 400
-                              : produits[0]['image'].length == 1
-                                  ? 400
-                                  : 500,
+                          height: isMobile ? 400 : 500,
                           width: 450,
+                          padding: EdgeInsets.symmetric(vertical: 10),
                           child: Column(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(),
-                                  child: Obx(() => Image.network(
-                                        principalImage.value,
-                                        fit: BoxFit.cover,
-                                      )),
-                                ),
-                              ),
+                              produits[0]['image'].length == 1
+                                  ? Expanded(
+                                      child: Container(
+                                        width: 450,
+                                        height: isMobile ? 400 : 500,
+                                        padding: EdgeInsets.symmetric(),
+                                        child: Obx(() => Image.network(
+                                            principalImage.value,
+                                            fit: BoxFit.fitHeight)),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Container(
+                                        width: 450,
+                                        padding: EdgeInsets.symmetric(),
+                                        child: Obx(() => Image.network(
+                                              principalImage.value,
+                                              fit: BoxFit.fitHeight,
+                                            )),
+                                      ),
+                                    ),
                               produits[0]['image'].length == 1
                                   ? Container()
                                   : SingleChildScrollView(
@@ -104,7 +111,7 @@ class _ProduitDetailState extends State<ProduitDetail> {
                           ),
                         ),
                         Container(
-                          height: 400,
+                          height: 500,
                           width: 450,
                           margin: EdgeInsets.symmetric(
                               horizontal: isMobile ? 0 : 30),
@@ -281,7 +288,10 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                       fontSize: 20,
                                                       color: pColor)),
                                               SelectableText(
-                                                  '\$${produits[0]['prixLivraison']}',
+                                                  produits[0]['prixLivraison'] ==
+                                                          0
+                                                      ? 'Gratuit'
+                                                      : '\$${produits[0]['prixLivraison']}',
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 20,
                                                       color: Colors.black)),
@@ -296,94 +306,140 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                     child: Padding(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 0),
-                                      child: Wrap(
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        runAlignment:
-                                            WrapAlignment.spaceBetween,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Obx(() => Text('\$$prixTotal',
-                                              style: GoogleFonts.jost(
-                                                  fontSize: 20,
-                                                  color: Colors.green))),
-                                          Padding(
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: pColor,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 20),
+                                                vertical: 10, horizontal: 10),
+                                            margin: const EdgeInsets.symmetric(
+                                              vertical: 10,
+                                            ),
                                             child: Row(
-                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    if (quantite.value <= 0)
-                                                      quantite.value = 0;
-                                                    else
-                                                      quantite.value--;
-                                                    prixTotal.value =
-                                                        getPrice(produits[0]) *
-                                                            quantite.value;
-                                                  },
-                                                  child: Icon(
-                                                      Icons
-                                                          .arrow_back_ios_new_outlined,
-                                                      color: pColor),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 8),
-                                                    child: Obx(
-                                                      () => Text(
-                                                          '${quantite.value}',
-                                                          style: GoogleFonts
-                                                              .poppins(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .blue)),
-                                                    )),
-                                                InkWell(
-                                                  onTap: () {
-                                                    quantite.value++;
-                                                    prixTotal.value =
-                                                        getPrice(produits[0]) *
-                                                            quantite.value;
-                                                  },
-                                                  child: Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_outlined,
-                                                      color: pColor),
-                                                ),
+                                                Text('Total :',
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 22,
+                                                        color: pColor)),
+                                                Obx(() => Text(
+                                                    '\$${prixTotal.toStringAsFixed(2)}',
+                                                    style: GoogleFonts.jost(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        fontSize: 30,
+                                                        color: Colors.green))),
                                               ],
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {},
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: pColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (quantite.value <= 0)
+                                                          quantite.value = 0;
+                                                        else
+                                                          quantite.value--;
+                                                        prixTotal
+                                                            .value = getPrice(
+                                                                produits[0]) *
+                                                            quantite.value;
+                                                      },
+                                                      child: Icon(
+                                                          Icons
+                                                              .arrow_back_ios_new_outlined,
+                                                          color: pColor),
+                                                    ),
+                                                    Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 8),
+                                                        child: Obx(
+                                                          () => Text(
+                                                              '${quantite.value}',
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .blue)),
+                                                        )),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        quantite.value++;
+                                                        prixTotal
+                                                            .value = getPrice(
+                                                                produits[0]) *
+                                                            quantite.value;
+                                                      },
+                                                      child: Icon(
+                                                          Icons
+                                                              .arrow_forward_ios_outlined,
+                                                          color: pColor),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 6, horizontal: 15),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(Icons.add_outlined,
-                                                      color: Colors.white),
-                                                  SizedBox(
-                                                    width: 10,
+                                              InkWell(
+                                                onTap: () {},
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: pColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
                                                   ),
-                                                  Text('Ajouter Au Panier',
-                                                      style: GoogleFonts.jost(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          fontSize: 20))
-                                                ],
-                                              ),
-                                            ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6,
+                                                      horizontal: 15),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(Icons.add_outlined,
+                                                          color: Colors.white),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text('Ajouter Au Panier',
+                                                          style:
+                                                              GoogleFonts.jost(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontSize: 20))
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           )
                                         ],
                                       ),
@@ -397,6 +453,25 @@ class _ProduitDetailState extends State<ProduitDetail> {
                       ],
                     ),
                   ),
+                ),
+                Container(
+                  child: produits[0]['description'] == null
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                width: 1000,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 10),
+                                child: Text('${produits[0]['description']}',
+                                    style: GoogleFonts.jost(
+                                        wordSpacing: 2, fontSize: 18)),
+                              ),
+                            ),
+                          ],
+                        ),
                 )
               ],
             ),
