@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ob2a/pages/categorie.dart';
+import 'package:ob2a/pages/produitDetail.dart';
+import 'package:ob2a/specialPages/connexion.dart';
+import 'package:ob2a/specialPages/inscription.dart';
 
 import 'body.dart';
 import 'pages/home.dart';
@@ -16,13 +19,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: '/',
+      initialRoute: '/produit/basket-homme',
       unknownRoute:
           GetPage(name: '/erreur404', page: () => Body(content: UnknownPage())),
       getPages: [
         GetPage(
             name: '/',
             page: () => Body(content: Accueil()),
+            transition: Transition.cupertino),
+        GetPage(
+            name: '/produit/:produit',
+            page: () => Body(content: ProduitDetail()),
+            transition: Transition.cupertino),
+        GetPage(
+            name: '/connexion',
+            page: () => Body(content: Connexion()),
+            transition: Transition.cupertino),
+        GetPage(
+            name: '/inscription',
+            page: () => Body(content: Inscription()),
             transition: Transition.cupertino),
         GetPage(
             name: '/produit',

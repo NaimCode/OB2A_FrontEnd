@@ -11,12 +11,20 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('O\'B2A',
-        style: GoogleFonts.jost(
-            fontWeight: FontWeight.w700,
-            letterSpacing: 2,
-            color: Colors.grey[800],
-            fontSize: 30));
+    return InkWell(
+      onTap: () {
+        Get.toNamed('/');
+      },
+      child: Container(
+        color: sColorLight,
+        child: Text('O\'B2A',
+            style: GoogleFonts.jost(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                color: Colors.grey[800],
+                fontSize: 30)),
+      ),
+    );
 
     //   Text('O\'B2A',
   }

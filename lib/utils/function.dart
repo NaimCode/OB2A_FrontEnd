@@ -24,6 +24,24 @@ String getImageUrl(var e, var size) {
         : e['image'][0]['formats'][size]['url'] ?? ERROR_NETWORK_IMAGE;
 }
 
+getPrice(var produits) {
+  if (produits['enPromotion'] == true && produits['prixPromotion'] != null)
+    return produits['prixPromotion'];
+  else
+    return produits['prix'];
+}
+
+String getImageUrlMini(var e, var size) {
+  if (size == 'large')
+    return e == null
+        ? e['image']['url']
+        : e['image'][0]['url'] ?? ERROR_NETWORK_IMAGE;
+  else
+    return e['image'][0] == null
+        ? e['image']['formats'][size]['url']
+        : e['image'][0]['formats'][size]['url'] ?? ERROR_NETWORK_IMAGE;
+}
+
 onSearched(String s) {
   List listQuery = s.split(' ');
   var value;

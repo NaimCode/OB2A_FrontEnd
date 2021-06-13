@@ -1,7 +1,7 @@
 const MenuPrincipal = [
   {
     'titre': 'Accueil',
-    'route': '/accueil',
+    'route': '/',
   },
   {
     'titre': 'Promotion',

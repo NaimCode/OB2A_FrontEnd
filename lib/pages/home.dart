@@ -240,7 +240,7 @@ class _SectionPromoProductState extends State<SectionPromoProduct> {
             http.get(Uri.parse('$API_URL/produits?_limit=8&enPromotion=true')),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Container(height: 400, child: ChargementDefault());
+            return Container(height: 600, child: ChargementDefault());
           var produits = [];
           if (snapshot.hasData) {
             produits = jsonDecode(snapshot.data!.body);

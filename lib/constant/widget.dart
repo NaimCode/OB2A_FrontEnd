@@ -19,7 +19,9 @@ class CardProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Get.toNamed('/produit/${e['slug']}');
+      },
       child: Container(
         height: isMobile ? 260 : 400,
         width: isMobile ? MediaQuery.of(context).size.width / 2.1 : 280,
