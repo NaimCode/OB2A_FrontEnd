@@ -30,7 +30,7 @@ class Authentification {
   }
 
   Future<void> checkEmail() async {}
-  enregistrementOnly(String mail, String password, String nom) async {
+  enregistrementOnly(String mail, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: mail,
@@ -45,6 +45,18 @@ class Authentification {
   sendVerifyEmail() {
     User? user = _firebaseAuth.currentUser;
     user!.sendEmailVerification();
+  }
+
+  deleteUser(
+    String mail,
+    String password,
+  ) async {
+    var user = await FirebaseAuth.instance.currentUser;
+    try {
+      await user!.delete();
+    } catch (e) {
+      print(e);
+    }
   }
 
   createUser() {}

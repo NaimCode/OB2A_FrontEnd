@@ -19,6 +19,7 @@ import 'pages/home.dart';
 import 'pages/produits.dart';
 import 'pages/unknown.dart';
 import 'service/authentification.dart';
+import 'test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: GetMaterialApp(
-          initialRoute: '/connexion',
+          initialRoute: '/',
           unknownRoute: GetPage(
               name: '/erreur404', page: () => Body(content: UnknownPage())),
           getPages: [
@@ -79,6 +80,10 @@ class MyApp extends StatelessWidget {
             GetPage(
                 name: '/produits/:slug',
                 page: () => Body(content: CategoriePage()),
+                transition: Transition.cupertino),
+            GetPage(
+                name: '/test',
+                page: () => Test(),
                 transition: Transition.cupertino),
           ],
           title: 'O\'B2A',
