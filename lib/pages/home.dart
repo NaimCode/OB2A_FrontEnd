@@ -6,8 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/constant/widget.dart';
+import 'package:ob2a/data/class.dart';
 import 'package:ob2a/data/internal.dart';
-
+import 'package:provider/provider.dart';
 import '../env.dart';
 
 class Accueil extends StatefulWidget {

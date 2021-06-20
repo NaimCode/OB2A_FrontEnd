@@ -15,27 +15,49 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="faisons le tour du monde sur un panda">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ob2a">
+  <meta name="apple-mobile-web-app-title" content="O'B2A">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <title>ob2a</title>
+  <title>O'B2A</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="/__/firebase/8.6.7/firebase-app.js"></script>
 
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="/__/firebase/8.6.7/firebase-analytics.js"></script>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
 
 <!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyARhBGL4_5JX3mvW1SlEiP4LThSrJCDcGk",
+    authDomain: "o-b2a-c5c02.firebaseapp.com",
+    databaseURL: "https://o-b2a-c5c02-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "o-b2a-c5c02",
+    storageBucket: "o-b2a-c5c02.appspot.com",
+    messagingSenderId: "1042016696741",
+    appId: "1:1042016696741:web:9c5537581250e98dbc504c",
+    measurementId: "G-PDR9CY23QL"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->

@@ -70,12 +70,9 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                       child: Container(
                                         width: 450,
                                         padding: EdgeInsets.symmetric(),
-                                        child: Obx(() => Hero(
-                                              tag: produits[0]['slug'],
-                                              child: Image.network(
-                                                principalImage.value,
-                                                fit: BoxFit.fitHeight,
-                                              ),
+                                        child: Obx(() => Image.network(
+                                              principalImage.value,
+                                              fit: BoxFit.fitHeight,
                                             )),
                                       ),
                                     ),

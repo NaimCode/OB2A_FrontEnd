@@ -112,3 +112,20 @@ class ChargementDefault extends StatelessWidget {
     );
   }
 }
+
+class Chargement extends StatelessWidget {
+  const Chargement({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: sColorLight,
+      body: Center(
+        child: SpinKitFadingCircle(
+          color: pColor,
+          size: 40.0,
+        ),
+      ),
+    );
+  }
+}

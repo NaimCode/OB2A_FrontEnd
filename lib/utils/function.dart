@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ob2a/data/class.dart';
 
 import '../env.dart';
 
@@ -76,4 +77,11 @@ getTitle(String s, int i, var l) {
       return '$i produit(s) trouvés pour: ${getStringFromUrl(l)}';
     default:
   }
+}
+
+bool isUser(Utilisateur? user) {
+  if (user!.uid == 'Anonyme')
+    return false;
+  else
+    return true;
 }

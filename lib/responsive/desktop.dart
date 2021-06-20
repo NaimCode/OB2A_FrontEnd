@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
+import 'package:ob2a/data/class.dart';
 import 'package:ob2a/data/internal.dart';
 import 'package:ob2a/state/globalVariable.dart';
 import 'package:ob2a/utils/function.dart';
+import 'package:provider/provider.dart';
 
 class WebAppBar extends StatefulWidget {
   WebAppBar({
@@ -16,8 +18,10 @@ class WebAppBar extends StatefulWidget {
 }
 
 class _WebAppBarState extends State<WebAppBar> {
+  Utilisateur? user;
   @override
   Widget build(BuildContext context) {
+    user = context.watch<Utilisateur?>();
     // var isMobile = MediaQuery.of(context).size.width < 800;
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
@@ -98,7 +102,12 @@ class _WebAppBarState extends State<WebAppBar> {
                       child: IconButton(
                           tooltip: 'Profile',
                           iconSize: 26,
-                          onPressed: () {},
+                          onPressed: () {
+                            if (isUser(user))
+                              Get.toNamed('/prodfile');
+                            else
+                              Get.toNamed('/connexion');
+                          },
                           icon: Icon(
                             Icons.person_outline_outlined,
                             color: pColor,

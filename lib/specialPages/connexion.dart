@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ob2a/constant/color.dart';
+import 'package:ob2a/constant/miniWidget.dart';
+import 'package:get/get.dart';
 
 class Connexion extends StatefulWidget {
   const Connexion({Key? key}) : super(key: key);
@@ -8,8 +12,142 @@ class Connexion extends StatefulWidget {
 }
 
 class _ConnexionState extends State<Connexion> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordKey = GlobalKey();
+  var error = ''.obs;
+  TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    var isMobile = MediaQuery.of(context).size.width < 800;
+    return Scaffold(
+        body: Row(
+      children: [
+        isMobile
+            ? Container()
+            : Expanded(
+                child: Container(
+                height: double.infinity,
+                child: Image.asset(
+                  'images/imageLog.jpg',
+                  fit: BoxFit.cover,
+                ),
+              )),
+        Container(
+          width: isMobile ? MediaQuery.of(context).size.width : 400,
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Logo(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Divider(),
+                ),
+                Text(
+                  'CONNEXION',
+                  style: GoogleFonts.jost(
+                      fontSize: 30, fontWeight: FontWeight.w200),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Saisir votre email';
+                      } else {
+                        if (value.isEmail)
+                          return null;
+                        else
+                          return 'Saisir un email valide';
+                      }
+                    },
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.mail_outline_outlined),
+                        filled: true,
+                        fillColor: sColor,
+                        labelText: 'Email'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: TextFormField(
+                    obscureText: true,
+                    key: _passwordKey,
+                    controller: password,
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return 'Saisir votre mot de passe';
+
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.lock_open_outlined),
+                        filled: true,
+                        fillColor: sColor,
+                        labelText: 'Mot de Passe'),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Mot de passe oublié?',
+                          textAlign: TextAlign.right,
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.blueAccent,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 50)),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // If the form is valid, display a snackbar. In the real world,
+                        // you'd often call a server or save the information in a database.
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Processing Data')));
+                      }
+                    },
+                    child: Text(
+                      'Se connecter',
+                      style: TextStyle(color: Colors.white),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Divider(),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Vous n\'avez pas encore un compte?',
+                      style: GoogleFonts.poppins(
+                          color: Colors.grey[500],
+                          fontSize: isMobile ? 11 : null),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Get.toNamed('/inscription');
+                      },
+                      child: Text('S\'inscrire',
+                          style: GoogleFonts.jost(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber)),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        )
+      ],
+    ));
   }
 }

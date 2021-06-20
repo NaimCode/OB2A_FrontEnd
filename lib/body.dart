@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
+import 'data/class.dart';
 import 'responsive/desktop.dart';
 import 'responsive/mobile.dart';
+import 'package:provider/provider.dart';
 
 class Body extends StatefulWidget {
   final content;
