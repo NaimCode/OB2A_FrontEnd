@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
-import 'package:ob2a/data/internal.dart';
-import 'constant/miniWidget.dart';
 import 'responsive/desktop.dart';
 import 'responsive/mobile.dart';
 

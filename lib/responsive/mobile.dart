@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
-import 'package:ob2a/data/internal.dart';
-import 'package:ob2a/state/globalVariable.dart';
-import 'package:ob2a/utils/function.dart';
 
 class MobileAppBar extends StatefulWidget {
   MobileAppBar({
@@ -70,8 +67,11 @@ class _MobileAppBarState extends State<MobileAppBar> {
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
       child: SliverAppBar(
+        pinned: true,
+        floating: true,
+        snap: true,
         leading: Get.currentRoute == '/'
-            ? null
+            ? Center()
             : IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -80,7 +80,6 @@ class _MobileAppBarState extends State<MobileAppBar> {
                   Icons.arrow_back_ios_new_outlined,
                 )),
         backgroundColor: sColorLight,
-        foregroundColor: pColor,
         title: Center(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +111,6 @@ class _MobileAppBarState extends State<MobileAppBar> {
             )
           ],
         )),
-        pinned: true,
       ),
     );
   }

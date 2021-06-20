@@ -18,18 +18,18 @@ class WebAppBar extends StatefulWidget {
 class _WebAppBarState extends State<WebAppBar> {
   @override
   Widget build(BuildContext context) {
-   // var isMobile = MediaQuery.of(context).size.width < 800;
+    // var isMobile = MediaQuery.of(context).size.width < 800;
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
       child: SliverAppBar(
-        leading:  Get.currentRoute=='/'
-            ? null :IconButton(
+        leading: Get.currentRoute == '/'
+            ? Center()
+            : IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 icon: Icon(
                   Icons.arrow_back_ios_new_outlined,
-                  
                 )),
         backgroundColor: sColorLight,
         foregroundColor: pColor,

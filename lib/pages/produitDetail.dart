@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:badges/badges.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -71,9 +70,12 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                       child: Container(
                                         width: 450,
                                         padding: EdgeInsets.symmetric(),
-                                        child: Obx(() => Image.network(
-                                              principalImage.value,
-                                              fit: BoxFit.fitHeight,
+                                        child: Obx(() => Hero(
+                                              tag: produits[0]['slug'],
+                                              child: Image.network(
+                                                principalImage.value,
+                                                fit: BoxFit.fitHeight,
+                                              ),
                                             )),
                                       ),
                                     ),
@@ -95,7 +97,6 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                                   ['small']
                                                               ['url'] ??
                                                           ERROR_NETWORK_IMAGE;
-                                                      e;
                                                     },
                                                     child: Image.network(
                                                       '${e['formats']['small']['url'] ?? ERROR_NETWORK_IMAGE}',

@@ -12,9 +12,13 @@ const MenuPrincipal = [
     'route': '/categorie',
   },
   {
-    'titre': 'Pages',
-    'route': '/pages',
-  }
+    'titre': 'Contact',
+    'route': '/pages/contact',
+  },
+  // {
+  //   'titre': 'Pages',
+  //   'route': '/pages',
+  // }
 ];
 const CategorieItem = [
   {
@@ -67,18 +71,18 @@ const PageItem = [
     'titre': 'Contact',
     'route': '/pages/contact',
   },
-  {
-    'titre': 'Apropos De Nous',
-    'route': '/pages/apropos-de-nous',
-  },
-  {
-    'titre': 'FAQ',
-    'route': '/pages/faq',
-  },
-  {
-    'titre': 'O\'B2A pro',
-    'route': '/pages/pro',
-  },
+  // {
+  //   'titre': 'Apropos De Nous',
+  //   'route': '/pages/apropos-de-nous',
+  // },
+  // {
+  //   'titre': 'FAQ',
+  //   'route': '/pages/faq',
+  // },
+  // {
+  //   'titre': 'O\'B2A pro',
+  //   'route': '/pages/pro',
+  // },
 ];
 const CategorieHome = [
   {

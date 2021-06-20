@@ -31,12 +31,16 @@ class CardProduct extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
-              child: Image.network(
-                  e['image'][0]['formats']['small']['url'] ??
-                      ERROR_NETWORK_IMAGE,
-                  width:
-                      isMobile ? MediaQuery.of(context).size.width / 2.1 : 280,
-                  fit: BoxFit.cover),
+              child: Hero(
+                tag: e['slug'],
+                child: Image.network(
+                    e['image'][0]['formats']['small']['url'] ??
+                        ERROR_NETWORK_IMAGE,
+                    width: isMobile
+                        ? MediaQuery.of(context).size.width / 2.1
+                        : 280,
+                    fit: BoxFit.cover),
+              ),
             ),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: isMobile ? 1 : 5),

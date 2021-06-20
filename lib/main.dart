@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/pages/categorie.dart';
+import 'package:ob2a/pages/contact.dart';
 import 'package:ob2a/pages/produitDetail.dart';
 import 'package:ob2a/specialPages/connexion.dart';
 import 'package:ob2a/specialPages/inscription.dart';
 
 import 'body.dart';
+import 'pages/faq.dart';
 import 'pages/home.dart';
 import 'pages/produits.dart';
 import 'pages/unknown.dart';
@@ -28,9 +31,17 @@ class MyApp extends StatelessWidget {
             page: () => Body(content: Accueil()),
             transition: Transition.cupertino),
         GetPage(
-            name: '/produit/:produit',
-            page: () => Body(content: ProduitDetail()),
+            name: '/pages/faq',
+            page: () => Body(content: FAQ()),
             transition: Transition.cupertino),
+        GetPage(
+            name: '/pages/contact',
+            page: () => Body(content: Contact()),
+            transition: Transition.cupertino),
+        GetPage(
+          name: '/produit/:produit',
+          page: () => Body(content: ProduitDetail()),
+        ),
         GetPage(
             name: '/connexion',
             page: () => Body(content: Connexion()),
@@ -50,7 +61,7 @@ class MyApp extends StatelessWidget {
       ],
       title: 'O\'B2A',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       debugShowCheckedModeBanner: false,
     );
