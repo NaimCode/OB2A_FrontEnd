@@ -94,3 +94,16 @@ bool isExist(List l, var e) {
   }
   return false;
 }
+
+getTabCompte(String s) {
+  switch (s) {
+    case 'panier':
+      return 1;
+    case 'commande':
+      return 2;
+    case 'parametre':
+      return 3;
+    default:
+      return 0;
+  }
+}

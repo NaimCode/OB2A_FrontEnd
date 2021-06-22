@@ -96,6 +96,101 @@ class _MenuPrincipalElementState extends State<MenuPrincipalElement> {
   }
 }
 
+class MenuPrincipalElementMobile extends StatefulWidget {
+  final menu;
+  const MenuPrincipalElementMobile({this.menu, Key? key}) : super(key: key);
+
+  @override
+  _MenuPrincipalElementMobileState createState() =>
+      _MenuPrincipalElementMobileState();
+}
+
+class _MenuPrincipalElementMobileState
+    extends State<MenuPrincipalElementMobile> {
+  @override
+  Widget build(BuildContext context) {
+    switch (widget.menu['titre']) {
+      case 'Catégorie':
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.menu['titre'],
+                style: GoogleFonts.jost(color: Colors.white, fontSize: 22)),
+            Container(
+              padding: EdgeInsets.only(left: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: CategorieItem.map((e) => TextButton(
+                      onPressed: () {
+                        Get.toNamed('${e['route']}');
+                      },
+                      child: Text('${e['titre']}',
+                          style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              color: sColorLight.withOpacity(0.6))),
+                    )).toList(),
+              ),
+            )
+          ],
+        );
+//  case 'Pages':
+//         return Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(widget.menu['titre'],
+//                 style: GoogleFonts.jost(color: Colors.white, fontSize: 22)),
+//             Container(
+//               padding: EdgeInsets.only(left: 20),
+//               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: CategorieItem.map((e) => TextButton(
+//                       onPressed: () {
+//                         Get.toNamed('${e['route']}');
+//                       },
+//                       child: Text('${e['titre']}',
+//                           style: GoogleFonts.roboto(
+//                               fontSize: 16, color: sColorLight)),
+//                     )).toList(),
+//               ),
+//             )
+//           ],
+//         );
+
+//       case 'Pages':
+//         return PopupMenuButton(
+//             onSelected: (int e) {
+//               Get.toNamed('${PageItem[e.toInt()]['route']}');
+//             },
+//             tooltip: 'Allez vers une page',
+//             child: Padding(
+//               padding: EdgeInsets.symmetric(horizontal: 8),
+//               child: Text(widget.menu['titre'],
+//                   style: GoogleFonts.jost(
+//                       color: pColor.withOpacity(0.8), fontSize: 18)),
+//             ),
+//             itemBuilder: (BuildContext context) =>
+//                 PageItem.map((e) => PopupMenuItem(
+//                       value: PageItem.indexOf(e),
+//                       child: Text('${e['titre']}',
+//                           style: GoogleFonts.roboto(fontSize: 16)),
+//                     )).toList());
+      default:
+        return TextButton(
+          onPressed: () {
+            Get.toNamed(widget.menu['route']);
+          },
+          child: Container(
+            child: Text(widget.menu['titre'],
+                style: GoogleFonts.jost(color: Colors.white, fontSize: 25)),
+          ),
+        );
+    }
+  }
+}
+
 class ChargementDefault extends StatelessWidget {
   const ChargementDefault({Key? key}) : super(key: key);
 

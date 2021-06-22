@@ -1,7 +1,12 @@
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
+import 'package:ob2a/data/class.dart';
+import 'package:ob2a/utils/function.dart';
+import 'package:provider/provider.dart';
 
 class MobileAppBar extends StatefulWidget {
   MobileAppBar({
@@ -61,8 +66,10 @@ class MobileAppBar extends StatefulWidget {
 //                     ),
 //                   ),
 class _MobileAppBarState extends State<MobileAppBar> {
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
+    user = context.watch<Utilisateur>();
     // var isMobile = MediaQuery.of(context).size.width < 800;
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
@@ -94,18 +101,63 @@ class _MobileAppBarState extends State<MobileAppBar> {
                       child: IconButton(
                           tooltip: 'Profile',
                           iconSize: 26,
-                          onPressed: () {},
+                          onPressed: () {
+                            if (isUser(user))
+                              Get.toNamed('/compte/profil');
+                            else
+                              Get.toNamed('/connexion');
+                          },
                           icon: Icon(
                             Icons.person_outline_outlined,
                             color: pColor,
                           ))),
-                  IconButton(
-                      tooltip: 'Panier',
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.shopping_basket_outlined,
-                        color: pColor,
-                      ))
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Utilisateur')
+                          .doc(user.uid)
+                          .collection('Panier')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return InkWell(
+                            onTap: () {
+                              Get.toNamed('/connexion');
+                            },
+                            child: Tooltip(
+                              message: 'Mon Panier',
+                              child: Badge(
+                                badgeColor: Colors.red,
+                                animationDuration: Duration(milliseconds: 600),
+                                badgeContent: Text(
+                                  '0',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                child: Icon(Icons.shopping_basket_outlined),
+                              ),
+                            ),
+                          );
+                        var snap;
+                        if (snapshot.hasData) {
+                          snap = snapshot.data;
+                        }
+                        return InkWell(
+                          onTap: () {
+                            Get.toNamed('/compte/panier');
+                          },
+                          child: Tooltip(
+                            message: 'Mon Panier',
+                            child: Badge(
+                              badgeColor: Colors.red,
+                              animationDuration: Duration(milliseconds: 600),
+                              badgeContent: Text(
+                                snap.docs.length.toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              child: Icon(Icons.shopping_basket_outlined),
+                            ),
+                          ),
+                        );
+                      }),
                 ],
               ),
             )

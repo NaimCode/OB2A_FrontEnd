@@ -108,7 +108,7 @@ class _WebAppBarState extends State<WebAppBar> {
                           iconSize: 26,
                           onPressed: () {
                             if (isUser(user))
-                              Get.toNamed('/compte');
+                              Get.toNamed('/compte/profil');
                             else
                               Get.toNamed('/connexion');
                           },
@@ -125,7 +125,9 @@ class _WebAppBarState extends State<WebAppBar> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting)
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Get.toNamed('/connexion');
+                            },
                             child: Tooltip(
                               message: 'Mon Panier',
                               child: Badge(
@@ -144,7 +146,9 @@ class _WebAppBarState extends State<WebAppBar> {
                           snap = snapshot.data;
                         }
                         return InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed('/compte/panier');
+                          },
                           child: Tooltip(
                             message: 'Mon Panier',
                             child: Badge(

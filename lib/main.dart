@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: GetMaterialApp(
-          initialRoute: '/compte',
+          initialRoute: '/',
           unknownRoute: GetPage(
               name: '/erreur404', page: () => Body(content: UnknownPage())),
           getPages: [
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
                 page: () => OB2A(page: Body(content: Accueil())),
                 transition: Transition.cupertino),
             GetPage(
-                name: '/compte',
+                name: '/compte/:param',
                 page: () => OB2A(page: Profil()),
                 transition: Transition.cupertino),
             GetPage(

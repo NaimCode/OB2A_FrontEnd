@@ -411,6 +411,36 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                   ],
                                                 ),
                                               ),
+                                              InkWell(
+                                                onTap: () {},
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.amber,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 6,
+                                                      horizontal:
+                                                          isMobile ? 5 : 15),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text('Acheter',
+                                                          style:
+                                                              GoogleFonts.jost(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                  fontSize: 17))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                               Obx(() => isChargingPanier.value
                                                   ? ChargementDefault()
                                                   : InkWell(
@@ -465,7 +495,10 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                         padding: EdgeInsets
                                                             .symmetric(
                                                                 vertical: 6,
-                                                                horizontal: 15),
+                                                                horizontal:
+                                                                    isMobile
+                                                                        ? 5
+                                                                        : 15),
                                                         child: Row(
                                                           mainAxisSize:
                                                               MainAxisSize.min,
@@ -487,7 +520,7 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                                         FontWeight
                                                                             .w300,
                                                                     fontSize:
-                                                                        20))
+                                                                        17))
                                                           ],
                                                         ),
                                                       ),

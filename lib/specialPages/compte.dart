@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/data/class.dart';
 import 'package:ob2a/responsive/desktop.dart';
 import 'package:ob2a/responsive/mobile.dart';
+import 'package:ob2a/utils/function.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-
 import '../env.dart';
 
 class Profil extends StatefulWidget {
@@ -43,12 +44,14 @@ class _ProfilState extends State<Profil> {
         child: Container(
           width: isMobile ? MediaQuery.of(context).size.width : 800,
           child: DefaultTabController(
+            initialIndex: getTabCompte(Get.parameters['param'] ?? ''),
             length: 4,
             child: NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverPersistentHeader(
+                    floating: true,
                     delegate: _SliverAppBarDelegate(
                       TabBar(
                         labelColor: Colors.black87,
@@ -190,7 +193,7 @@ class _PanierState extends State<Panier> {
               snap = snapshot.data;
               for (var i in snap.docs) {
                 var produit = PanierItem.fromDoc(i);
-
+                // produit.getInfo();
                 listPanier.add(produit);
               }
             }
@@ -209,9 +212,113 @@ class _PanierState extends State<Panier> {
                           // principalImage.value = getImageUrl(produits[0], 'large');
                           // prixTotal.value = getPrice(produits[0]) * quantite.value;
                         }
-                        return ListTile(
-                          title: Text(produits[0]['titre']),
-                        );
+                        // return InkWell(
+                        //   onTap: () {},
+                        //   child: Container(
+                        //     padding: EdgeInsets.symmetric(
+                        //         vertical: 10, horizontal: 10),
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //       children: [
+                        //         Image.network(
+                        //           getImageUrlMini(produits[0], 'small'),
+                        //           fit: BoxFit.fitHeight,
+                        //           height: 200,
+                        //         ),
+                        //         Padding(
+                        //           padding: const EdgeInsets.symmetric(
+                        //               horizontal: 10),
+                        //           child: Column(
+                        //             children: [
+                        //               Text(produits[0]['titre'],
+                        //                   style: GoogleFonts.jost(
+                        //                       fontSize: 20,
+                        //                       fontWeight: FontWeight.bold)),
+                        //               Text('\$${produits[0]['prix']}',
+                        //                   style: GoogleFonts.jost(
+                        //                       fontSize: 20,
+                        //                       fontWeight: FontWeight.bold)),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //         IconButton(
+                        //             tooltip: 'Retirer',
+                        //             onPressed: () async {
+                        //               await FirebaseFirestore.instance
+                        //                   .collection('Utilisateur')
+                        //                   .doc(widget.user.uid)
+                        //                   .collection('Panier')
+                        //                   .doc(produits[0]['slug'])
+                        //                   .delete();
+                        //             },
+                        //             icon: Icon(Icons.remove_circle_outline,
+                        //                 color: Colors.red)),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // );
+                        return produits[0]['stock'] != 0
+                            ? ListTile(
+                                onTap: () {
+                                  Get.toNamed(
+                                      '/produit/${produits[0]['slug']}');
+                                },
+                                leading: Image.network(
+                                  getImageUrlMini(produits[0], 'small'),
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                                title: Text(produits[0]['titre']),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        'Prix Total: \$${produits[0]['prix']}'),
+                                    Text(
+                                        'Quantité: ${listPanier[index].quantite}'),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                    tooltip: 'Retirer',
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection('Utilisateur')
+                                          .doc(widget.user.uid)
+                                          .collection('Panier')
+                                          .doc(produits[0]['slug'])
+                                          .delete();
+                                    },
+                                    icon: Icon(Icons.remove_circle_outline,
+                                        color: Colors.red)))
+                            : ListTile(
+                                onTap: () {
+                                  Get.toNamed(
+                                      '/produit/${produits[0]['slug']}');
+                                },
+                                tileColor: Colors.black38,
+                                leading: Image.network(
+                                  getImageUrlMini(produits[0], 'small'),
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                                title: Text('En rupture de stock',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 20)),
+                                trailing: IconButton(
+                                    tooltip: 'Retirer',
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection('Utilisateur')
+                                          .doc(widget.user.uid)
+                                          .collection('Panier')
+                                          .doc(produits[0]['slug'])
+                                          .delete();
+                                    },
+                                    icon: Icon(Icons.remove_circle_outline,
+                                        color: Colors.red)));
                       });
                 });
           }),
@@ -233,6 +340,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
+      color: sColorLight,
       child: _tabBar,
     );
   }

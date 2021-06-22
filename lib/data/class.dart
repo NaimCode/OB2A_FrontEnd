@@ -50,7 +50,7 @@ class PanierItem {
   late int quantite;
 
   late int id;
-  late var produit;
+  var produit;
   Timestamp? date;
   PanierItem.fromDoc(var data) {
     id = data['produitId'];
@@ -58,8 +58,7 @@ class PanierItem {
     quantite = data['quantite'];
   }
   // getInfo() async {
-  //   var response =
-  //       await http.get(Uri.parse('$API_URL/produits/${id.toString()}'));
+  //   var response = await http.get(Uri.parse('$API_URL/produits?id=$id'));
   //   var produits = jsonDecode(response.body);
   //   print(produits[0]);
   //   produit = produits[0];
