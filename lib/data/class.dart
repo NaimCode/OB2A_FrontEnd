@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import '../env.dart';
+
 class Utilisateur {
   String? uid;
   String? nom;
@@ -38,4 +44,24 @@ class Utilisateur {
       this.email,
       this.image,
       this.admin});
+}
+
+class PanierItem {
+  late int quantite;
+
+  late int id;
+  late var produit;
+  Timestamp? date;
+  PanierItem.fromDoc(var data) {
+    id = data['produitId'];
+    date = data['date'];
+    quantite = data['quantite'];
+  }
+  // getInfo() async {
+  //   var response =
+  //       await http.get(Uri.parse('$API_URL/produits/${id.toString()}'));
+  //   var produits = jsonDecode(response.body);
+  //   print(produits[0]);
+  //   produit = produits[0];
+  // }
 }

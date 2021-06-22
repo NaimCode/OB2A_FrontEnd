@@ -22,12 +22,12 @@ class _ProduitDetailState extends State<ProduitDetail> {
   var principalImage = ''.obs;
   var prixTotal = 0.0.obs;
   var quantite = 1.obs;
-  Utilisateur? user;
-  bool isChargingPanier = false;
+  late Utilisateur user;
+  var isChargingPanier = false.obs;
   @override
   Widget build(BuildContext context) {
-    user = context.watch<Utilisateur?>();
-    for (var i = 0; i < user!.panier.length; i++) print(i.toString());
+    user = context.watch<Utilisateur>();
+
     var isMobile = MediaQuery.of(context).size.width < 800;
     return FutureBuilder<http.Response>(
         future: http.get(
@@ -41,6 +41,8 @@ class _ProduitDetailState extends State<ProduitDetail> {
             principalImage.value = getImageUrl(produits[0], 'large');
             prixTotal.value = getPrice(produits[0]) * quantite.value;
           }
+
+          print('ccc');
           return Container(
             color: sColorLight,
             padding: EdgeInsets.symmetric(
@@ -409,97 +411,37 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                   ],
                                                 ),
                                               ),
-                                              isExist(user!.panier,
-                                                      produits[0]['id'])
-                                                  ? InkWell(
-                                                      onTap: () async {
-                                                        isChargingPanier = true;
-                                                        var panier =
-                                                            user!.panier;
-
-                                                        panier.remove(
-                                                            produits[0]['id']
-                                                                .toString());
-                                                        await FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'Utilisateur')
-                                                            .doc(user!.uid)
-                                                            .update({
-                                                          'panier': panier
-                                                        });
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(SnackBar(
-                                                                content: Text(
-                                                                    '${produits[0]['titre']} a été retiré de votre panier',
-                                                                    style: GoogleFonts
-                                                                        .roboto(
-                                                                            color:
-                                                                                Colors.red))));
-                                                        isChargingPanier =
-                                                            false;
-                                                      },
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.red,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                        ),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 6,
-                                                                horizontal: 15),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                                Icons
-                                                                    .remove_circle_outline,
-                                                                color: Colors
-                                                                    .white),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Text(
-                                                                'Retirer Du Panier',
-                                                                style: GoogleFonts.jost(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                    fontSize:
-                                                                        20))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    )
+                                              Obx(() => isChargingPanier.value
+                                                  ? ChargementDefault()
                                                   : InkWell(
                                                       onTap: () async {
-                                                        if (user!.uid ==
+                                                        if (user.uid ==
                                                             'Anonyme') {
                                                           Get.toNamed(
                                                               '/inscription');
                                                         } else {
-                                                          isChargingPanier =
-                                                              true;
+                                                          isChargingPanier
+                                                              .value = true;
 
-                                                          user!.panier.add(
-                                                              produits[0]['id']
-                                                                  .toString());
                                                           await FirebaseFirestore
                                                               .instance
                                                               .collection(
                                                                   'Utilisateur')
-                                                              .doc(user!.uid)
-                                                              .update({
-                                                            'panier':
-                                                                user!.panier
+                                                              .doc(user.uid)
+                                                              .collection(
+                                                                  'Panier')
+                                                              .doc(produits[0]
+                                                                  ['slug'])
+                                                              .set({
+                                                            'produitId':
+                                                                produits[0]
+                                                                    ['id'],
+                                                            'quantite':
+                                                                quantite.value,
+                                                            'date':
+                                                                Timestamp.now(),
                                                           });
+
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(SnackBar(
@@ -508,8 +450,8 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                                       style: GoogleFonts.roboto(
                                                                           color:
                                                                               Colors.white))));
-                                                          isChargingPanier =
-                                                              false;
+                                                          isChargingPanier
+                                                              .value = false;
                                                         }
                                                       },
                                                       child: Container(
@@ -549,7 +491,7 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                           ],
                                                         ),
                                                       ),
-                                                    )
+                                                    ))
                                             ],
                                           )
                                         ],

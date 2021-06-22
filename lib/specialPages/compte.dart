@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +10,9 @@ import 'package:ob2a/data/class.dart';
 import 'package:ob2a/responsive/desktop.dart';
 import 'package:ob2a/responsive/mobile.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import '../env.dart';
 
 class Profil extends StatefulWidget {
   const Profil({Key? key}) : super(key: key);
@@ -16,10 +22,10 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  Utilisateur? user;
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
-    user = context.watch<Utilisateur?>();
+    user = context.watch<Utilisateur>();
     var isMobile = MediaQuery.of(context).size.width < 800;
     return Scaffold(
       appBar: AppBar(
@@ -70,9 +76,11 @@ class _ProfilState extends State<Profil> {
               body: TabBarView(
                 children: [
                   Information(
-                    user: user!,
+                    user: user,
                   ),
-                  Icon(Icons.directions_bike),
+                  Panier(
+                    user: user,
+                  ),
                   Icon(Icons.directions_bike),
                   Icon(Icons.directions_bike),
                 ],
@@ -148,6 +156,65 @@ class _InformationState extends State<Information> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class Panier extends StatefulWidget {
+  final user;
+  Panier({this.user, Key? key}) : super(key: key);
+
+  @override
+  _PanierState createState() => _PanierState();
+}
+
+class _PanierState extends State<Panier> {
+  @override
+  Widget build(BuildContext context) {
+    var isMobile = MediaQuery.of(context).size.width < 800;
+    return Container(
+      padding:
+          EdgeInsets.symmetric(vertical: 10, horizontal: isMobile ? 10 : 0),
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Utilisateur')
+              .doc(widget.user.uid)
+              .collection('Panier')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Chargement();
+            var snap;
+            var listPanier = [];
+            if (snapshot.hasData) {
+              snap = snapshot.data;
+              for (var i in snap.docs) {
+                var produit = PanierItem.fromDoc(i);
+
+                listPanier.add(produit);
+              }
+            }
+            return ListView.builder(
+                itemCount: listPanier.length,
+                itemBuilder: (context, index) {
+                  return FutureBuilder<http.Response>(
+                      future: http.get(Uri.parse(
+                          '$API_URL/produits?id=${listPanier[index].id}')),
+                      builder: (context, snap) {
+                        if (snap.connectionState == ConnectionState.waiting)
+                          return ChargementDefault();
+                        var produits = [];
+                        if (snap.hasData) {
+                          produits = jsonDecode(snap.data!.body);
+                          // principalImage.value = getImageUrl(produits[0], 'large');
+                          // prixTotal.value = getPrice(produits[0]) * quantite.value;
+                        }
+                        return ListTile(
+                          title: Text(produits[0]['titre']),
+                        );
+                      });
+                });
+          }),
     );
   }
 }

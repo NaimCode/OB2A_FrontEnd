@@ -22,10 +22,10 @@ class WebAppBar extends StatefulWidget {
 }
 
 class _WebAppBarState extends State<WebAppBar> {
-  Utilisateur? user;
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
-    user = context.watch<Utilisateur?>();
+    user = context.watch<Utilisateur>();
     // var isMobile = MediaQuery.of(context).size.width < 800;
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
@@ -119,7 +119,8 @@ class _WebAppBarState extends State<WebAppBar> {
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('Utilisateur')
-                          .doc(user!.uid)
+                          .doc(user.uid)
+                          .collection('Panier')
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting)
@@ -150,7 +151,7 @@ class _WebAppBarState extends State<WebAppBar> {
                               badgeColor: Colors.red,
                               animationDuration: Duration(milliseconds: 600),
                               badgeContent: Text(
-                                snap['panier'].length.toString(),
+                                snap.docs.length.toString(),
                                 style: TextStyle(color: Colors.white),
                               ),
                               child: Icon(Icons.shopping_basket_outlined),

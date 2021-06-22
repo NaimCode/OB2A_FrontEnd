@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: GetMaterialApp(
-          initialRoute: '/produit/basket-homme-rouge',
+          initialRoute: '/compte',
           unknownRoute: GetPage(
               name: '/erreur404', page: () => Body(content: UnknownPage())),
           getPages: [
@@ -155,8 +155,8 @@ class OB2A extends StatelessWidget {
                     }
 
                     //  print(profile);
-                    return ProxyProvider0<Utilisateur?>(
-                      update: (_, __) => userProvider,
+                    return ProxyProvider0<Utilisateur>(
+                      update: (_, __) => userProvider!,
                       child: page,
                     );
                   });
