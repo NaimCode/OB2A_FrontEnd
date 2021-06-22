@@ -1,5 +1,9 @@
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/data/class.dart';
@@ -104,7 +108,7 @@ class _WebAppBarState extends State<WebAppBar> {
                           iconSize: 26,
                           onPressed: () {
                             if (isUser(user))
-                              Get.toNamed('/prodfile');
+                              Get.toNamed('/compte');
                             else
                               Get.toNamed('/connexion');
                           },
@@ -112,13 +116,48 @@ class _WebAppBarState extends State<WebAppBar> {
                             Icons.person_outline_outlined,
                             color: pColor,
                           ))),
-                  IconButton(
-                      tooltip: 'Panier',
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.shopping_basket_outlined,
-                        color: pColor,
-                      ))
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('Utilisateur')
+                          .doc(user!.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return InkWell(
+                            onTap: () {},
+                            child: Tooltip(
+                              message: 'Mon Panier',
+                              child: Badge(
+                                badgeColor: Colors.red,
+                                animationDuration: Duration(milliseconds: 600),
+                                badgeContent: Text(
+                                  '0',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                child: Icon(Icons.shopping_basket_outlined),
+                              ),
+                            ),
+                          );
+                        var snap;
+                        if (snapshot.hasData) {
+                          snap = snapshot.data;
+                        }
+                        return InkWell(
+                          onTap: () {},
+                          child: Tooltip(
+                            message: 'Mon Panier',
+                            child: Badge(
+                              badgeColor: Colors.red,
+                              animationDuration: Duration(milliseconds: 600),
+                              badgeContent: Text(
+                                snap['panier'].length.toString(),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              child: Icon(Icons.shopping_basket_outlined),
+                            ),
+                          ),
+                        );
+                      }),
                 ],
               ),
             )

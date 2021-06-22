@@ -7,6 +7,7 @@ class Utilisateur {
   List commande = [];
   List panier = [];
   bool? admin;
+
   String? boutique;
 
   Utilisateur.fromMap(Map<String, dynamic> data) {

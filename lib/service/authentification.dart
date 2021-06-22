@@ -30,7 +30,7 @@ class Authentification {
   }
 
   Future<void> checkEmail() async {}
-  enregistrementOnly(String mail, String password) async {
+  Future<String> enregistrementOnly(String mail, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: mail,
@@ -38,7 +38,10 @@ class Authentification {
       );
       return 'Connexion réussie';
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') return 'Email existe déjà';
+      if (e.code == 'email-already-in-use')
+        return 'Email existe déjà';
+      else
+        return e.code;
     }
   }
 

@@ -15,12 +15,14 @@ class Inscription extends StatefulWidget {
   _InscriptionState createState() => _InscriptionState();
 }
 
+TextEditingController email = TextEditingController();
+
 class _InscriptionState extends State<Inscription> {
   final _formKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey();
   var error = ''.obs;
   TextEditingController password = TextEditingController();
-  TextEditingController email = TextEditingController();
+
   TextEditingController nom = TextEditingController();
   var auth = Authentification(FirebaseAuth.instance);
   @override
@@ -153,13 +155,12 @@ class _InscriptionState extends State<Inscription> {
                         primary: Colors.amber,
                         padding:
                             EdgeInsets.symmetric(vertical: 8, horizontal: 50)),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        var check =
-                            auth.enregistrementOnly(email.text, password.text);
+                        var check = await auth.enregistrementOnly(
+                            email.text, password.text);
                         switch (check) {
                           case 'Connexion réussie':
-                            print('Connexion réussie');
                             Get.to(
                                 VerifEmail(
                                     neew: true,
@@ -169,12 +170,10 @@ class _InscriptionState extends State<Inscription> {
                                 fullscreenDialog: true);
                             break;
                           case 'Email existe déjà':
-                            print('Email existe déjà');
                             error.value =
                                 'Email existe déjà, veuillez-vous connecter';
                             break;
                           default:
-                            print('Default');
                         }
                       }
                     },
@@ -269,7 +268,7 @@ class _VerifEmailState extends State<VerifEmail> {
       await userCreditial.reload();
       // if (widget.goto.nom == 'Sign')
       newUser = false;
-      Get.back();
+      Get.toNamed('/');
 
       // ignore: unnecessary_statements
 
@@ -298,44 +297,47 @@ class _VerifEmailState extends State<VerifEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          width: 400,
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Un Email vous a été envoyé',
-                  style: GoogleFonts.jost(
-                    fontSize: 18,
-                    color: Colors.black87,
+      body: Center(
+        child: Container(
+            width: 400,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Un Email vous a été envoyé',
+                    style: GoogleFonts.jost(
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    'Veuillez le vérifier afin de continuer',
+                    style:
+                        GoogleFonts.jost(fontSize: 16, color: Colors.black87),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Text(
-                  'Veuillez le vérifier afin de continuer',
-                  style: GoogleFonts.jost(fontSize: 16, color: Colors.black87),
+                ),
+                Text(
+                  widget.mail,
+                  style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-              ),
-              Text(
-                widget.mail,
-                style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
 
-              // Expanded(
-              //   child: Chargement1(
-              //       message: 'Veuillez vérifier votre Email',
-              //       submessage: email.text),
-              // ),
-            ],
-          )),
+                // Expanded(
+                //   child: Chargement1(
+                //       message: 'Veuillez vérifier votre Email',
+                //       submessage: email.text),
+                // ),
+              ],
+            )),
+      ),
     );
   }
 }

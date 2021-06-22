@@ -1,12 +1,14 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
+import 'package:ob2a/data/class.dart';
 import 'package:ob2a/utils/function.dart';
-
+import 'package:provider/provider.dart';
 import '../env.dart';
 
 class ProduitDetail extends StatefulWidget {
@@ -20,8 +22,12 @@ class _ProduitDetailState extends State<ProduitDetail> {
   var principalImage = ''.obs;
   var prixTotal = 0.0.obs;
   var quantite = 1.obs;
+  Utilisateur? user;
+  bool isChargingPanier = false;
   @override
   Widget build(BuildContext context) {
+    user = context.watch<Utilisateur?>();
+    for (var i = 0; i < user!.panier.length; i++) print(i.toString());
     var isMobile = MediaQuery.of(context).size.width < 800;
     return FutureBuilder<http.Response>(
         future: http.get(
@@ -403,40 +409,147 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                   ],
                                                 ),
                                               ),
-                                              InkWell(
-                                                onTap: () {},
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: pColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 6,
-                                                      horizontal: 15),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(Icons.add_outlined,
-                                                          color: Colors.white),
-                                                      SizedBox(
-                                                        width: 10,
+                                              isExist(user!.panier,
+                                                      produits[0]['id'])
+                                                  ? InkWell(
+                                                      onTap: () async {
+                                                        isChargingPanier = true;
+                                                        var panier =
+                                                            user!.panier;
+
+                                                        panier.remove(
+                                                            produits[0]['id']
+                                                                .toString());
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'Utilisateur')
+                                                            .doc(user!.uid)
+                                                            .update({
+                                                          'panier': panier
+                                                        });
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(SnackBar(
+                                                                content: Text(
+                                                                    '${produits[0]['titre']} a été retiré de votre panier',
+                                                                    style: GoogleFonts
+                                                                        .roboto(
+                                                                            color:
+                                                                                Colors.red))));
+                                                        isChargingPanier =
+                                                            false;
+                                                      },
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 6,
+                                                                horizontal: 15),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                                Icons
+                                                                    .remove_circle_outline,
+                                                                color: Colors
+                                                                    .white),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Text(
+                                                                'Retirer Du Panier',
+                                                                style: GoogleFonts.jost(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                    fontSize:
+                                                                        20))
+                                                          ],
+                                                        ),
                                                       ),
-                                                      Text('Ajouter Au Panier',
-                                                          style:
-                                                              GoogleFonts.jost(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                  fontSize: 20))
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () async {
+                                                        if (user!.uid ==
+                                                            'Anonyme') {
+                                                          Get.toNamed(
+                                                              '/inscription');
+                                                        } else {
+                                                          isChargingPanier =
+                                                              true;
+
+                                                          user!.panier.add(
+                                                              produits[0]['id']
+                                                                  .toString());
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Utilisateur')
+                                                              .doc(user!.uid)
+                                                              .update({
+                                                            'panier':
+                                                                user!.panier
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      '${produits[0]['titre']} a été ajouté à votre panier',
+                                                                      style: GoogleFonts.roboto(
+                                                                          color:
+                                                                              Colors.white))));
+                                                          isChargingPanier =
+                                                              false;
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: pColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 6,
+                                                                horizontal: 15),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                                Icons
+                                                                    .add_outlined,
+                                                                color: Colors
+                                                                    .white),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Text(
+                                                                'Ajouter Au Panier',
+                                                                style: GoogleFonts.jost(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                    fontSize:
+                                                                        20))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
                                             ],
                                           )
                                         ],

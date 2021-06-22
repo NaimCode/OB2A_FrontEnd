@@ -19,6 +19,7 @@ import 'pages/home.dart';
 import 'pages/produits.dart';
 import 'pages/unknown.dart';
 import 'service/authentification.dart';
+import 'specialPages/compte.dart';
 import 'test.dart';
 
 void main() async {
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: GetMaterialApp(
-          initialRoute: '/',
+          initialRoute: '/produit/basket-homme-rouge',
           unknownRoute: GetPage(
               name: '/erreur404', page: () => Body(content: UnknownPage())),
           getPages: [
@@ -54,16 +55,20 @@ class MyApp extends StatelessWidget {
                 page: () => OB2A(page: Body(content: Accueil())),
                 transition: Transition.cupertino),
             GetPage(
+                name: '/compte',
+                page: () => OB2A(page: Profil()),
+                transition: Transition.cupertino),
+            GetPage(
                 name: '/pages/faq',
-                page: () => Body(content: FAQ()),
+                page: () => OB2A(page: Body(content: FAQ())),
                 transition: Transition.cupertino),
             GetPage(
                 name: '/pages/contact',
-                page: () => Body(content: Contact()),
+                page: () => OB2A(page: Body(content: Contact())),
                 transition: Transition.cupertino),
             GetPage(
               name: '/produit/:produit',
-              page: () => Body(content: ProduitDetail()),
+              page: () => OB2A(page: Body(content: ProduitDetail())),
             ),
             GetPage(
                 name: '/connexion',
@@ -75,11 +80,11 @@ class MyApp extends StatelessWidget {
                 transition: Transition.cupertinoDialog),
             GetPage(
                 name: '/produit',
-                page: () => Body(content: Produits()),
+                page: () => OB2A(page: Body(content: Produits())),
                 transition: Transition.cupertino),
             GetPage(
                 name: '/produits/:slug',
-                page: () => Body(content: CategoriePage()),
+                page: () => OB2A(page: Body(content: CategoriePage())),
                 transition: Transition.cupertino),
             GetPage(
                 name: '/test',

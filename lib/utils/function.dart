@@ -85,3 +85,12 @@ bool isUser(Utilisateur? user) {
   else
     return true;
 }
+
+bool isExist(List l, var e) {
+  for (var i in l) {
+    if (i == e) {
+      return true;
+    }
+  }
+  return false;
+}
