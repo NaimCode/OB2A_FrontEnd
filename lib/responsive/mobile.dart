@@ -167,3 +167,100 @@ class _MobileAppBarState extends State<MobileAppBar> {
     );
   }
 }
+
+class IosAppBar extends StatelessWidget {
+  late Utilisateur user;
+  @override
+  Widget build(BuildContext context) {
+    user = context.watch<Utilisateur>();
+    // var isMobile = MediaQuery.of(context).size.width < 800;
+    return AppBar(
+      leading: Get.currentRoute == '/'
+          ? Center()
+          : IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios_new_outlined,
+              )),
+      backgroundColor: sColorLight,
+      title: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Logo(),
+          Container(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    child: IconButton(
+                        tooltip: 'Profile',
+                        iconSize: 26,
+                        onPressed: () {
+                          if (isUser(user))
+                            Get.toNamed('/compte/profil');
+                          else
+                            Get.toNamed('/connexion');
+                        },
+                        icon: Icon(
+                          Icons.person_outline_outlined,
+                          color: pColor,
+                        ))),
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Utilisateur')
+                        .doc(user.uid)
+                        .collection('Panier')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting)
+                        return InkWell(
+                          onTap: () {
+                            Get.toNamed('/connexion');
+                          },
+                          child: Tooltip(
+                            message: 'Mon Panier',
+                            child: Badge(
+                              badgeColor: Colors.red,
+                              animationDuration: Duration(milliseconds: 600),
+                              badgeContent: Text(
+                                '0',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              child: Icon(Icons.shopping_basket_outlined),
+                            ),
+                          ),
+                        );
+                      var snap;
+                      if (snapshot.hasData) {
+                        snap = snapshot.data;
+                      }
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed('/compte/panier');
+                        },
+                        child: Tooltip(
+                          message: 'Mon Panier',
+                          child: Badge(
+                            badgeColor: Colors.red,
+                            animationDuration: Duration(milliseconds: 600),
+                            badgeContent: Text(
+                              snap.docs.length.toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: Icon(Icons.shopping_basket_outlined),
+                          ),
+                        ),
+                      );
+                    }),
+              ],
+            ),
+          )
+        ],
+      )),
+    );
+  }
+}
