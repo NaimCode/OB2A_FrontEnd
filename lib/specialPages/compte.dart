@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:core';
+import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +48,7 @@ class _ProfilState extends State<Profil> {
           width: isMobile ? MediaQuery.of(context).size.width : 800,
           child: DefaultTabController(
             initialIndex: getTabCompte(Get.parameters['param'] ?? ''),
-            length: 4,
+            length: 3,
             child: NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
@@ -54,6 +57,7 @@ class _ProfilState extends State<Profil> {
                     floating: true,
                     delegate: _SliverAppBarDelegate(
                       TabBar(
+                        isScrollable: true,
                         labelColor: Colors.black87,
                         unselectedLabelColor: Colors.grey,
                         tabs: [
@@ -66,9 +70,9 @@ class _ProfilState extends State<Profil> {
                           Tab(
                               icon: Icon(Icons.local_shipping_outlined),
                               text: "Commandes"),
-                          Tab(
-                              icon: Icon(Icons.settings_outlined),
-                              text: "Paramètre"),
+                          // Tab(
+                          //     icon: Icon(Icons.settings_outlined),
+                          //     text: "Paramètre"),
                         ],
                       ),
                     ),
@@ -84,8 +88,11 @@ class _ProfilState extends State<Profil> {
                   Panier(
                     user: user,
                   ),
-                  Icon(Icons.directions_bike),
-                  Icon(Icons.directions_bike),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Aucune commande pour l\'instant'),
+                  ),
+                  // Icon(Icons.directions_bike),
                 ],
               ),
             ),
@@ -172,156 +179,196 @@ class Panier extends StatefulWidget {
 }
 
 class _PanierState extends State<Panier> {
+  var checkPrix = 0.0.obs;
+  var checkPrixD = 0.0;
+
+  Future<bool> rebuild(var t) async {
+    if (!mounted) return false;
+
+    // if there's a current frame,
+    if (SchedulerBinding.instance!.schedulerPhase != SchedulerPhase.idle) {
+      // wait for the end of that frame.
+      await SchedulerBinding.instance!.endOfFrame;
+      if (!mounted) return false;
+    }
+
+    checkPrix.value = t;
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var isMobile = MediaQuery.of(context).size.width < 800;
-    return Container(
-      padding:
-          EdgeInsets.symmetric(vertical: 10, horizontal: isMobile ? 10 : 0),
-      child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Utilisateur')
-              .doc(widget.user.uid)
-              .collection('Panier')
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Chargement();
-            var snap;
-            var listPanier = [];
-            if (snapshot.hasData) {
-              snap = snapshot.data;
-              for (var i in snap.docs) {
-                var produit = PanierItem.fromDoc(i);
-                // produit.getInfo();
-                listPanier.add(produit);
+    return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 100),
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: Colors.amber),
+            onPressed: () {},
+            child: Text('Valider',
+                style: GoogleFonts.jost(fontSize: isMobile ? 20 : 25))),
+      ),
+      body: Container(
+        padding:
+            EdgeInsets.symmetric(vertical: 10, horizontal: isMobile ? 10 : 0),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('Utilisateur')
+                .doc(widget.user.uid)
+                .collection('Panier')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Chargement();
+              var snap;
+              var listPanier = [];
+              if (snapshot.hasData) {
+                snap = snapshot.data;
+                for (var i in snap.docs) {
+                  var produit = PanierItem.fromDoc(i);
+                  // produit.getInfo();
+                  listPanier.add(produit);
+                }
               }
-            }
-            return ListView.builder(
-                itemCount: listPanier.length,
-                itemBuilder: (context, index) {
-                  return FutureBuilder<http.Response>(
-                      future: http.get(Uri.parse(
-                          '$API_URL/produits?id=${listPanier[index].id}')),
-                      builder: (context, snap) {
-                        if (snap.connectionState == ConnectionState.waiting)
-                          return ChargementDefault();
-                        var produits = [];
-                        if (snap.hasData) {
-                          produits = jsonDecode(snap.data!.body);
-                          // principalImage.value = getImageUrl(produits[0], 'large');
-                          // prixTotal.value = getPrice(produits[0]) * quantite.value;
-                        }
-                        // return InkWell(
-                        //   onTap: () {},
-                        //   child: Container(
-                        //     padding: EdgeInsets.symmetric(
-                        //         vertical: 10, horizontal: 10),
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //       children: [
-                        //         Image.network(
-                        //           getImageUrlMini(produits[0], 'small'),
-                        //           fit: BoxFit.fitHeight,
-                        //           height: 200,
-                        //         ),
-                        //         Padding(
-                        //           padding: const EdgeInsets.symmetric(
-                        //               horizontal: 10),
-                        //           child: Column(
-                        //             children: [
-                        //               Text(produits[0]['titre'],
-                        //                   style: GoogleFonts.jost(
-                        //                       fontSize: 20,
-                        //                       fontWeight: FontWeight.bold)),
-                        //               Text('\$${produits[0]['prix']}',
-                        //                   style: GoogleFonts.jost(
-                        //                       fontSize: 20,
-                        //                       fontWeight: FontWeight.bold)),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //         IconButton(
-                        //             tooltip: 'Retirer',
-                        //             onPressed: () async {
-                        //               await FirebaseFirestore.instance
-                        //                   .collection('Utilisateur')
-                        //                   .doc(widget.user.uid)
-                        //                   .collection('Panier')
-                        //                   .doc(produits[0]['slug'])
-                        //                   .delete();
-                        //             },
-                        //             icon: Icon(Icons.remove_circle_outline,
-                        //                 color: Colors.red)),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // );
-                        return produits[0]['stock'] != 0
-                            ? ListTile(
-                                onTap: () {
-                                  Get.toNamed(
-                                      '/produit/${produits[0]['slug']}');
-                                },
-                                leading: Image.network(
-                                  getImageUrlMini(produits[0], 'small'),
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                ),
-                                title: Text(produits[0]['titre']),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                        'Prix Total: \$${produits[0]['prix']}'),
-                                    Text(
-                                        'Quantité: ${listPanier[index].quantite}'),
-                                  ],
-                                ),
-                                trailing: IconButton(
-                                    tooltip: 'Retirer',
-                                    onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('Utilisateur')
-                                          .doc(widget.user.uid)
-                                          .collection('Panier')
-                                          .doc(produits[0]['slug'])
-                                          .delete();
-                                    },
-                                    icon: Icon(Icons.remove_circle_outline,
-                                        color: Colors.red)))
-                            : ListTile(
-                                onTap: () {
-                                  Get.toNamed(
-                                      '/produit/${produits[0]['slug']}');
-                                },
-                                tileColor: Colors.black38,
-                                leading: Image.network(
-                                  getImageUrlMini(produits[0], 'small'),
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                ),
-                                title: Text('En rupture de stock',
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 20)),
-                                trailing: IconButton(
-                                    tooltip: 'Retirer',
-                                    onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('Utilisateur')
-                                          .doc(widget.user.uid)
-                                          .collection('Panier')
-                                          .doc(produits[0]['slug'])
-                                          .delete();
-                                    },
-                                    icon: Icon(Icons.remove_circle_outline,
-                                        color: Colors.red)));
-                      });
-                });
-          }),
+              return ListView.builder(
+                  itemCount: listPanier.length,
+                  itemBuilder: (context, index) {
+                    return FutureBuilder<http.Response>(
+                        future: http.get(Uri.parse(
+                            '$API_URL/produits?id=${listPanier[index].id}')),
+                        builder: (context, snap) {
+                          if (snap.connectionState == ConnectionState.waiting)
+                            return ChargementDefault();
+                          var produits = [];
+                          if (snap.hasData) {
+                            produits = jsonDecode(snap.data!.body);
+                            checkPrixD += (produits[0]['prix'] *
+                                        listPanier[index].quantite) +
+                                    produits[0]['prixLivraison'] ??
+                                0;
+                            // if (index == listPanier.length - 1) {
+                            //   checkPrix.value = checkPrixD;
+                            // }
+                            // principalImage.value = getImageUrl(produits[0], 'large');
+                            // prixTotal.value = getPrice(produits[0]) * quantite.value;
+                          }
+                          // return InkWell(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     padding: EdgeInsets.symmetric(
+                          //         vertical: 10, horizontal: 10),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Image.network(
+                          //           getImageUrlMini(produits[0], 'small'),
+                          //           fit: BoxFit.fitHeight,
+                          //           height: 200,
+                          //         ),
+                          //         Padding(
+                          //           padding: const EdgeInsets.symmetric(
+                          //               horizontal: 10),
+                          //           child: Column(
+                          //             children: [
+                          //               Text(produits[0]['titre'],
+                          //                   style: GoogleFonts.jost(
+                          //                       fontSize: 20,
+                          //                       fontWeight: FontWeight.bold)),
+                          //               Text('\$${produits[0]['prix']}',
+                          //                   style: GoogleFonts.jost(
+                          //                       fontSize: 20,
+                          //                       fontWeight: FontWeight.bold)),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         IconButton(
+                          //             tooltip: 'Retirer',
+                          //             onPressed: () async {
+                          //               await FirebaseFirestore.instance
+                          //                   .collection('Utilisateur')
+                          //                   .doc(widget.user.uid)
+                          //                   .collection('Panier')
+                          //                   .doc(produits[0]['slug'])
+                          //                   .delete();
+                          //             },
+                          //             icon: Icon(Icons.remove_circle_outline,
+                          //                 color: Colors.red)),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // );
+                          return produits[0]['stock'] != 0
+                              ? ListTile(
+                                  onTap: () {
+                                    Get.toNamed(
+                                        '/produit/${produits[0]['slug']}');
+                                  },
+                                  leading: Image.network(
+                                    getImageUrlMini(produits[0], 'small'),
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                  ),
+                                  title: Text(produits[0]['titre']),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                          'Prix Total: \$${(produits[0]['prix'] * listPanier[index].quantite)} ${produits[0]['prixLivraison'] == null || produits[0]['prixLivraison'] == 0 ? "" : " + \$${produits[0]['prixLivraison']}"} '),
+                                      Text(
+                                          'Quantité: ${listPanier[index].quantite}'),
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                      tooltip: 'Retirer',
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('Utilisateur')
+                                            .doc(widget.user.uid)
+                                            .collection('Panier')
+                                            .doc(produits[0]['slug'])
+                                            .delete();
+                                      },
+                                      icon: Icon(Icons.remove_circle_outline,
+                                          color: Colors.red)))
+                              : ListTile(
+                                  onTap: () {
+                                    Get.toNamed(
+                                        '/produit/${produits[0]['slug']}');
+                                  },
+                                  tileColor: Colors.black38,
+                                  leading: Image.network(
+                                    getImageUrlMini(produits[0], 'small'),
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                  ),
+                                  title: Text('En rupture de stock',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 20)),
+                                  trailing: IconButton(
+                                      tooltip: 'Retirer',
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('Utilisateur')
+                                            .doc(widget.user.uid)
+                                            .collection('Panier')
+                                            .doc(produits[0]['slug'])
+                                            .delete();
+                                      },
+                                      icon: Icon(Icons.remove_circle_outline,
+                                          color: Colors.red)));
+                        });
+                  });
+            }),
+      ),
     );
   }
 }

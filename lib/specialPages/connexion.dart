@@ -19,6 +19,7 @@ class _ConnexionState extends State<Connexion> {
   final _passwordKey = GlobalKey();
   var auth = Authentification(FirebaseAuth.instance);
   var error = ''.obs;
+  var isCharging = false.obs;
   TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -108,36 +109,43 @@ class _ConnexionState extends State<Connexion> {
                 SizedBox(
                   height: 30,
                 ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.blueAccent,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 50)),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        var check =
-                            await auth.connection(email.text, password.text);
-                        switch (check) {
-                          case 'Connexion réussi, ravis de vous revoir':
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(check)));
-                            Get.toNamed('/');
+                Obx(() => isCharging.value
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ChargementDefault(),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blueAccent,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 50)),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            isCharging.value = true;
+                            var check = await auth.connection(
+                                email.text, password.text);
+                            isCharging.value = false;
+                            switch (check) {
+                              case 'Connexion réussi, ravis de vous revoir':
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(check)));
+                                Get.toNamed('/');
 
-                            break;
+                                break;
 
-                          default:
-                            error.value = check;
-                            break;
-                        }
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
+                              default:
+                                error.value = check;
+                                break;
+                            }
+                            // If the form is valid, display a snackbar. In the real world,
+                            // you'd often call a server or save the information in a database.
 
-                      }
-                    },
-                    child: Text(
-                      'Se connecter',
-                      style: TextStyle(color: Colors.white),
-                    )),
+                          }
+                        },
+                        child: Text(
+                          'Se connecter',
+                          style: TextStyle(color: Colors.white),
+                        ))),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Divider(),
