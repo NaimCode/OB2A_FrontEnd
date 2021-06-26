@@ -8,13 +8,14 @@ const MenuPrincipal = [
     'route': '/produit?query=enPromotion&value=true',
   },
   {
-    'titre': 'Catégorie',
-    'route': '/categorie',
-  },
-  {
     'titre': 'Contact',
     'route': '/pages/contact',
   },
+  {
+    'titre': 'Catégorie',
+    'route': '/categorie',
+  },
+
   // {
   //   'titre': 'Pages',
   //   'route': '/pages',
@@ -100,4 +101,10 @@ const CategorieHome = [
     'route': '/produits/enfant?type=categorie',
     'titre': 'Enfant'
   }
+];
+
+List<String> allDevise = <String>[
+  'Euro',
+  'Dollar',
+  'FCFA',
 ];

@@ -1,14 +1,22 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_button/menu_button.dart';
 import 'package:ob2a/constant/color.dart';
+import 'package:ob2a/data/class.dart';
+import 'package:ob2a/data/internal.dart';
+import 'package:ob2a/state/globalVariable.dart';
+import 'package:ob2a/utils/function.dart';
 
 import '../env.dart';
 
 class CardProduct extends StatelessWidget {
   final e;
+  final user;
   CardProduct({
+    this.user,
     this.e,
     Key? key,
     required this.isMobile,
@@ -52,7 +60,9 @@ class CardProduct extends StatelessWidget {
                     e['prixPromotion'] == null ||
                     e['enPromotion'] == false
                 ? SelectableText(
-                    '\$${e['prix']}',
+                    // '\$${e['prix']}'
+                    getDevisePrice(
+                        e['prix'], isUser(user) ? user.devise : devise.value),
                     style: GoogleFonts.jost(fontSize: 18),
                     textAlign: TextAlign.left,
                   )
@@ -60,7 +70,8 @@ class CardProduct extends StatelessWidget {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       SelectableText(
-                        '\$${e['prix']}',
+                        getDevisePrice(e['prix'],
+                            isUser(user) ? user.devise : devise.value),
                         style: GoogleFonts.jost(
                             fontSize: 14, color: pColor.withOpacity(0.4)),
                         textAlign: TextAlign.left,
@@ -69,7 +80,8 @@ class CardProduct extends StatelessWidget {
                         width: isMobile ? 3 : 10,
                       ),
                       SelectableText(
-                        '\$${e['prixPromotion']}',
+                        getDevisePrice(e['prixPromotion'],
+                            isUser(user) ? user.devise : devise.value),
                         style: GoogleFonts.jost(fontSize: 18),
                         textAlign: TextAlign.left,
                       ),
@@ -204,5 +216,123 @@ class Search extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SettingsButton extends StatelessWidget {
+  const SettingsButton({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final Utilisateur user;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        tooltip: 'Pamamètre',
+        onPressed: () {
+          Get.defaultDialog(
+              title: 'Paramètre',
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Dévise',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      MenuButton<String>(
+                        child: Container(
+                          color: sColorLight,
+                          width: 93,
+                          height: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5, right: 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                    child: isUser(user)
+                                        ? Text(user.devise!,
+                                            overflow: TextOverflow.ellipsis)
+                                        : Obx(() => Text(devise.value,
+                                            overflow: TextOverflow.ellipsis))),
+                                const SizedBox(
+                                  width: 12,
+                                  height: 17,
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        items: allDevise,
+                        itemBuilder: (String value) => Container(
+                          height: 35,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 5),
+                          child: Text(value),
+                        ),
+                        toggledChild: Container(
+                          child: SizedBox(
+                            width: 93,
+                            height: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5, right: 3),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Flexible(
+                                      child: isUser(user)
+                                          ? Text(user.devise!,
+                                              overflow: TextOverflow.ellipsis)
+                                          : Obx(() => Text(devise.value,
+                                              overflow:
+                                                  TextOverflow.ellipsis))),
+                                  const SizedBox(
+                                    width: 12,
+                                    height: 17,
+                                    child: FittedBox(
+                                      fit: BoxFit.fill,
+                                      child: Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onItemSelected: (String value) async {
+                          if (isUser(user))
+                            await FirebaseFirestore.instance
+                                .collection('Utilisateur')
+                                .doc(user.uid!)
+                                .update({'devise': value});
+                          else
+                            Get.toNamed('/inscription');
+                        },
+                        onMenuButtonToggle: (bool isToggle) {
+                          if (!isToggle) Get.back();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ));
+        },
+        icon: Icon(Icons.settings_outlined));
   }
 }

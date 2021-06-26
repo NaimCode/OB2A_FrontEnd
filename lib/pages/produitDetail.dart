@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/data/class.dart';
+import 'package:ob2a/state/globalVariable.dart';
 import 'package:ob2a/utils/function.dart';
 import 'package:provider/provider.dart';
 import '../env.dart';
@@ -140,7 +141,11 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                       produits[0]['prixPromotion'] == null ||
                                       produits[0]['enPromotion'] == false
                                   ? SelectableText(
-                                      '\$${produits[0]['prix']}',
+                                      getDevisePrice(
+                                          produits[0]['prix'],
+                                          isUser(user)
+                                              ? user.devise!
+                                              : devise.value),
                                       style: GoogleFonts.jost(fontSize: 25),
                                       textAlign: TextAlign.left,
                                     )
@@ -149,7 +154,11 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         SelectableText(
-                                          '\$${produits[0]['prix']}',
+                                          getDevisePrice(
+                                              produits[0]['prix'],
+                                              isUser(user)
+                                                  ? user.devise!
+                                                  : devise.value),
                                           style: GoogleFonts.jost(
                                               fontSize: 25,
                                               color: pColor.withOpacity(0.4)),
@@ -159,7 +168,11 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                           width: 10,
                                         ),
                                         SelectableText(
-                                          '\$${produits[0]['prixPromotion']}',
+                                          getDevisePrice(
+                                              produits[0]['prixPromotion'],
+                                              isUser(user)
+                                                  ? user.devise!
+                                                  : devise.value),
                                           style: GoogleFonts.jost(fontSize: 25),
                                           textAlign: TextAlign.left,
                                         ),
@@ -297,7 +310,12 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                   produits[0]['prixLivraison'] ==
                                                           0
                                                       ? 'Gratuit'
-                                                      : '\$${produits[0]['prixLivraison']}',
+                                                      : getDevisePrice(
+                                                          produits[0]
+                                                              ['prixLivraison'],
+                                                          isUser(user)
+                                                              ? user.devise!
+                                                              : devise.value),
                                                   style: GoogleFonts.poppins(
                                                       fontSize: 20,
                                                       color: Colors.black)),
@@ -340,7 +358,11 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                         fontSize: 22,
                                                         color: pColor)),
                                                 Obx(() => Text(
-                                                    '\$${prixTotal.toStringAsFixed(2)}',
+                                                    getDevisePrice(
+                                                        prixTotal.value,
+                                                        isUser(user)
+                                                            ? user.devise!
+                                                            : devise.value),
                                                     style: GoogleFonts.jost(
                                                         fontWeight:
                                                             FontWeight.w300,
@@ -412,7 +434,10 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                 ),
                                               ),
                                               InkWell(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  if (!isUser(user))
+                                                    Get.toNamed('/inscription');
+                                                },
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     color: Colors.amber,
@@ -445,8 +470,7 @@ class _ProduitDetailState extends State<ProduitDetail> {
                                                   ? ChargementDefault()
                                                   : InkWell(
                                                       onTap: () async {
-                                                        if (user.uid ==
-                                                            'Anonyme') {
+                                                        if (!isUser(user)) {
                                                           Get.toNamed(
                                                               '/inscription');
                                                         } else {

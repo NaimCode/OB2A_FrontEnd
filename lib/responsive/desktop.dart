@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_button/menu_button.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
+import 'package:ob2a/constant/widget.dart';
 import 'package:ob2a/data/class.dart';
 import 'package:ob2a/data/internal.dart';
 import 'package:ob2a/state/globalVariable.dart';
@@ -26,19 +28,11 @@ class _WebAppBarState extends State<WebAppBar> {
   @override
   Widget build(BuildContext context) {
     user = context.watch<Utilisateur>();
+
     // var isMobile = MediaQuery.of(context).size.width < 800;
     return Theme(
       data: ThemeData(primaryIconTheme: IconThemeData(color: pColor)),
       child: SliverAppBar(
-        leading: Get.currentRoute == '/'
-            ? Center()
-            : IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                )),
         backgroundColor: sColorLight,
         foregroundColor: pColor,
         title: Center(
@@ -126,7 +120,10 @@ class _WebAppBarState extends State<WebAppBar> {
                         if (snapshot.connectionState == ConnectionState.waiting)
                           return InkWell(
                             onTap: () {
-                              Get.toNamed('/connexion');
+                              if (isUser(user))
+                                Get.toNamed('/compte/panier');
+                              else
+                                Get.toNamed('/connexion');
                             },
                             child: Tooltip(
                               message: 'Mon Panier',
@@ -147,7 +144,10 @@ class _WebAppBarState extends State<WebAppBar> {
                         }
                         return InkWell(
                           onTap: () {
-                            Get.toNamed('/compte/panier');
+                            if (isUser(user))
+                              Get.toNamed('/compte/panier');
+                            else
+                              Get.toNamed('/connexion');
                           },
                           child: Tooltip(
                             message: 'Mon Panier',
@@ -163,6 +163,8 @@ class _WebAppBarState extends State<WebAppBar> {
                           ),
                         );
                       }),
+                  SizedBox(width: 8),
+                  SettingsButton(user: user)
                 ],
               ),
             )

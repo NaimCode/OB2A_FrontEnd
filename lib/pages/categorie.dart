@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:ob2a/constant/widget.dart';
+import 'package:ob2a/data/class.dart';
+import 'package:provider/provider.dart';
 import 'package:ob2a/utils/function.dart';
 import '../env.dart';
 
@@ -17,9 +19,10 @@ class CategoriePage extends StatefulWidget {
 }
 
 class _CategoriePageState extends State<CategoriePage> {
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
-   
+    user = context.watch<Utilisateur>();
     var isMobile = MediaQuery.of(context).size.width < 800;
     return FutureBuilder<http.Response>(
         future: http.get(Uri.parse('$API_URL${getTypeRoute(Get.parameters)}')),
@@ -31,7 +34,6 @@ class _CategoriePageState extends State<CategoriePage> {
           var categorie;
           if (snapshot.hasData) {
             categorie = json.decode(snapshot.data!.body);
-        
           }
           return Container(
             child: ListView(
@@ -79,8 +81,11 @@ class _CategoriePageState extends State<CategoriePage> {
                             )
                           : Wrap(
                               children: categorie[0]['produits']
-                                  .map((e) =>
-                                      CardProduct(isMobile: isMobile, e: e))
+                                  .map((e) => CardProduct(
+                                        isMobile: isMobile,
+                                        e: e,
+                                        user: user,
+                                      ))
                                   .toList()
                                   .cast<Widget>(),
                             ),

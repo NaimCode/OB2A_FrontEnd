@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_button/menu_button.dart';
 import 'package:ob2a/constant/color.dart';
 import 'constant/miniWidget.dart';
+import 'constant/widget.dart';
 import 'data/class.dart';
 import 'data/internal.dart';
 import 'responsive/desktop.dart';
@@ -97,15 +99,15 @@ class _BodyState extends State<Body> {
             : null,
         appBar: isMobile
             ? AppBar(
-                leading: Get.currentRoute == '/'
-                    ? Center()
-                    : IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios_new_outlined,
-                        )),
+                // leading: Get.currentRoute == '/'
+                //     ? Center()
+                //     : IconButton(
+                //         onPressed: () {
+                //           Navigator.pop(context);
+                //         },
+                //         icon: Icon(
+                //           Icons.arrow_back_ios_new_outlined,
+                //         )),
                 backgroundColor: sColorLight,
                 title: Center(
                     child: Row(
@@ -129,7 +131,6 @@ class _BodyState extends State<Body> {
                                   },
                                   icon: Icon(
                                     Icons.person_outline_outlined,
-                                    color: pColor,
                                   ))),
                           StreamBuilder(
                               stream: FirebaseFirestore.instance
@@ -142,7 +143,10 @@ class _BodyState extends State<Body> {
                                     ConnectionState.waiting)
                                   return InkWell(
                                     onTap: () {
-                                      Get.toNamed('/connexion');
+                                      if (isUser(user))
+                                        Get.toNamed('/compte/panier');
+                                      else
+                                        Get.toNamed('/connexion');
                                     },
                                     child: Tooltip(
                                       message: 'Mon Panier',
@@ -165,17 +169,30 @@ class _BodyState extends State<Body> {
                                 }
                                 return InkWell(
                                   onTap: () {
-                                    Get.toNamed('/compte/panier');
+                                    if (isUser(user))
+                                      Get.toNamed('/compte/panier');
+                                    else
+                                      Get.toNamed('/connexion');
                                   },
                                   child: Tooltip(
                                     message: 'Mon Panier',
                                     child: Badge(
                                       badgeColor: Colors.red,
+                                      padding: EdgeInsets.all(
+                                          snap.docs.length.toString() == '0'
+                                              ? 5
+                                              : 3),
                                       animationDuration:
                                           Duration(milliseconds: 600),
                                       badgeContent: Text(
                                         snap.docs.length.toString(),
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize:
+                                                snap.docs.length.toString() ==
+                                                        '0'
+                                                    ? null
+                                                    : 13),
                                       ),
                                       child:
                                           Icon(Icons.shopping_basket_outlined),
@@ -183,6 +200,8 @@ class _BodyState extends State<Body> {
                                   ),
                                 );
                               }),
+                          SizedBox(width: 8),
+                          SettingsButton(user: user),
                         ],
                       ),
                     )

@@ -3,16 +3,21 @@ import 'dart:core';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:menu_button/menu_button.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/data/class.dart';
+import 'package:ob2a/data/internal.dart';
 import 'package:ob2a/responsive/desktop.dart';
 import 'package:ob2a/responsive/mobile.dart';
+import 'package:ob2a/service/authentification.dart';
+import 'package:ob2a/state/globalVariable.dart';
 import 'package:ob2a/utils/function.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -48,7 +53,7 @@ class _ProfilState extends State<Profil> {
           width: isMobile ? MediaQuery.of(context).size.width : 800,
           child: DefaultTabController(
             initialIndex: getTabCompte(Get.parameters['param'] ?? ''),
-            length: 3,
+            length: 4,
             child: NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
@@ -70,6 +75,9 @@ class _ProfilState extends State<Profil> {
                           Tab(
                               icon: Icon(Icons.local_shipping_outlined),
                               text: "Commandes"),
+                          Tab(
+                              icon: Icon(Icons.settings_outlined),
+                              text: "Paramètre"),
                           // Tab(
                           //     icon: Icon(Icons.settings_outlined),
                           //     text: "Paramètre"),
@@ -92,6 +100,142 @@ class _ProfilState extends State<Profil> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text('Aucune commande pour l\'instant'),
                   ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 10, horizontal: isMobile ? 10 : 0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Dévise',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            MenuButton<String>(
+                              child: Container(
+                                color: sColorLight,
+                                width: 93,
+                                height: 40,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                          child: isUser(user)
+                                              ? Text(user.devise!,
+                                                  overflow:
+                                                      TextOverflow.ellipsis)
+                                              : Obx(() => Text(devise.value,
+                                                  overflow:
+                                                      TextOverflow.ellipsis))),
+                                      const SizedBox(
+                                        width: 12,
+                                        height: 17,
+                                        child: FittedBox(
+                                          fit: BoxFit.fill,
+                                          child: Icon(
+                                            Icons.arrow_drop_down,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              items: allDevise,
+                              itemBuilder: (String value) => Container(
+                                height: 35,
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 0.0, horizontal: 5),
+                                child: Text(value),
+                              ),
+                              toggledChild: Container(
+                                child: SizedBox(
+                                  width: 93,
+                                  height: 40,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 3),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Flexible(
+                                            child: isUser(user)
+                                                ? Text(user.devise!,
+                                                    overflow:
+                                                        TextOverflow.ellipsis)
+                                                : Obx(() => Text(devise.value,
+                                                    overflow: TextOverflow
+                                                        .ellipsis))),
+                                        const SizedBox(
+                                          width: 12,
+                                          height: 17,
+                                          child: FittedBox(
+                                            fit: BoxFit.fill,
+                                            child: Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onItemSelected: (String value) async {
+                                if (isUser(user))
+                                  await FirebaseFirestore.instance
+                                      .collection('Utilisateur')
+                                      .doc(user.uid!)
+                                      .update({'devise': value});
+                                else
+                                  Get.toNamed('/inscription');
+                              },
+                              onMenuButtonToggle: (bool isToggle) {
+                                if (!isToggle) Get.back();
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 100,
+                        ),
+                        ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 30),
+                                primary: Colors.red),
+                            onPressed: () {
+                              Get.defaultDialog(
+                                  title: 'Déconnexion',
+                                  middleText:
+                                      'Vous êtes sur le point de vous déconnectez',
+                                  textConfirm: 'Confirmer',
+                                  textCancel: 'Annuler',
+                                  onCancel: () {
+                                    Get.back();
+                                  },
+                                  onConfirm: () async {
+                                    await Authentification(
+                                            FirebaseAuth.instance)
+                                        .deconnection();
+                                    Get.toNamed('/');
+                                  });
+                            },
+                            icon: Icon(Icons.login_outlined),
+                            label: Text('Se déconnecter',
+                                style: GoogleFonts.jost(
+                                    fontSize: 18, color: Colors.white)))
+                      ],
+                    ),
+                  )
                   // Icon(Icons.directions_bike),
                 ],
               ),
@@ -322,7 +466,7 @@ class _PanierState extends State<Panier> {
                                         height: 5,
                                       ),
                                       Text(
-                                          'Prix Total: \$${(produits[0]['prix'] * listPanier[index].quantite)} ${produits[0]['prixLivraison'] == null || produits[0]['prixLivraison'] == 0 ? "" : " + \$${produits[0]['prixLivraison']}"} '),
+                                          'Prix Total: ${getDevisePrice((produits[0]['prix'] * listPanier[index].quantite), isUser(widget.user) ? widget.user.devise! : devise.value)} ${produits[0]['prixLivraison'] == null || produits[0]['prixLivraison'] == 0 ? "" : " + ${getDevisePrice(produits[0]['prixLivraison'], isUser(widget.user) ? widget.user.devise! : devise.value)}"} '),
                                       Text(
                                           'Quantité: ${listPanier[index].quantite}'),
                                     ],

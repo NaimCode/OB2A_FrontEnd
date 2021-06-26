@@ -80,7 +80,7 @@ getTitle(String s, int i, var l) {
 }
 
 bool isUser(Utilisateur? user) {
-  if (user!.uid == 'Anonyme')
+  if (user!.email == 'naimzeroab@gmail.com')
     return false;
   else
     return true;
@@ -105,5 +105,24 @@ getTabCompte(String s) {
       return 3;
     default:
       return 0;
+  }
+}
+
+String getDevisePrice(double prix, String devise) {
+  double e_d = 1.2;
+  double e_f = 655.0;
+  double p = prix;
+  switch (devise) {
+    case 'Euro':
+      return '€${prix.toStringAsFixed(2)}';
+    case 'Dollar':
+      return '\$${(prix * e_d).toStringAsFixed(2)}';
+    case 'FCFA':
+      prix = p * e_f;
+      prix = prix / 100;
+      prix = prix.ceilToDouble() * 100;
+      return '${prix}FCFA';
+    default:
+      return '€$prix';
   }
 }

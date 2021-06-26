@@ -19,9 +19,11 @@ class Accueil extends StatefulWidget {
 }
 
 class _AccueilState extends State<Accueil> {
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
     var isMobile = MediaQuery.of(context).size.width < 800;
+    user = context.watch<Utilisateur>();
     return Container(
       child: ListView(
         physics: isMobile ? NeverScrollableScrollPhysics() : null,
@@ -29,8 +31,12 @@ class _AccueilState extends State<Accueil> {
         children: [
           Landing(),
           SectionCategorie(),
-          SectionNewProduct(),
-          SectionPromoProduct(),
+          SectionNewProduct(
+            user: user,
+          ),
+          SectionPromoProduct(
+            user: user,
+          ),
           SectionCollection()
         ],
       ),
@@ -284,7 +290,8 @@ class SectionCategorie extends StatelessWidget {
 }
 
 class SectionNewProduct extends StatefulWidget {
-  const SectionNewProduct({Key? key}) : super(key: key);
+  final user;
+  const SectionNewProduct({this.user, Key? key}) : super(key: key);
 
   @override
   _SectionNewProductState createState() => _SectionNewProductState();
@@ -340,7 +347,11 @@ class _SectionNewProductState extends State<SectionNewProduct> {
                     ),
                     Wrap(
                       children: produits
-                          .map((e) => CardProduct(isMobile: isMobile, e: e))
+                          .map((e) => CardProduct(
+                                isMobile: isMobile,
+                                e: e,
+                                user: widget.user,
+                              ))
                           .toList(),
                     ),
                     // Container(
@@ -355,7 +366,8 @@ class _SectionNewProductState extends State<SectionNewProduct> {
 }
 
 class SectionPromoProduct extends StatefulWidget {
-  const SectionPromoProduct({Key? key}) : super(key: key);
+  final user;
+  const SectionPromoProduct({this.user, Key? key}) : super(key: key);
 
   @override
   _SectionPromoProductState createState() => _SectionPromoProductState();
@@ -412,7 +424,11 @@ class _SectionPromoProductState extends State<SectionPromoProduct> {
                     ),
                     Wrap(
                       children: produits
-                          .map((e) => CardProduct(isMobile: isMobile, e: e))
+                          .map((e) => CardProduct(
+                                isMobile: isMobile,
+                                e: e,
+                                user: widget.user,
+                              ))
                           .toList(),
                     ),
                   ]));

@@ -10,8 +10,7 @@ class Utilisateur {
   String? email;
   String? password;
   String? image;
-  List commande = [];
-  List panier = [];
+  String? devise;
   bool? admin;
 
   String? boutique;
@@ -19,7 +18,7 @@ class Utilisateur {
   Utilisateur.fromMap(Map<String, dynamic> data) {
     nom = data['nom'];
     uid = data['uid'];
-
+    devise = data['devise'];
     image = data['image'];
     email = data['email'];
     password = data['password'];
@@ -29,7 +28,7 @@ class Utilisateur {
   Utilisateur.fromDoc(var data) {
     nom = data['nom'];
     uid = data['uid'];
-
+    devise = data['devise'];
     image = data['image'];
     email = data['email'];
     password = data['password'];
@@ -43,6 +42,7 @@ class Utilisateur {
       this.password,
       this.email,
       this.image,
+      this.devise,
       this.admin});
 }
 

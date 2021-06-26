@@ -7,8 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/constant/miniWidget.dart';
 import 'package:ob2a/constant/widget.dart';
+import 'package:ob2a/data/class.dart';
 import 'package:ob2a/utils/function.dart';
-
+import 'package:provider/provider.dart';
 import '../env.dart';
 
 class Produits extends StatefulWidget {
@@ -19,9 +20,11 @@ class Produits extends StatefulWidget {
 }
 
 class _ProduitsState extends State<Produits> {
+  late Utilisateur user;
   @override
   Widget build(BuildContext context) {
     var isMobile = MediaQuery.of(context).size.width < 800;
+    user = context.watch<Utilisateur>();
     return FutureBuilder<http.Response>(
         future: http
             .get(Uri.parse('$API_URL/produits${getQueryUrl(Get.parameters)}')),
@@ -79,7 +82,11 @@ class _ProduitsState extends State<Produits> {
                     ),
                     Wrap(
                       children: produits
-                          .map((e) => CardProduct(isMobile: isMobile, e: e))
+                          .map((e) => CardProduct(
+                                isMobile: isMobile,
+                                e: e,
+                                user: user,
+                              ))
                           .toList()
                           .cast<Widget>(),
                     ),

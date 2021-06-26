@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/pages/categorie.dart';
 import 'package:ob2a/pages/contact.dart';
 import 'package:ob2a/pages/produitDetail.dart';
 import 'package:ob2a/specialPages/connexion.dart';
 import 'package:ob2a/specialPages/inscription.dart';
+import 'package:ob2a/state/globalVariable.dart';
 import 'package:provider/provider.dart';
 
 import 'body.dart';
@@ -26,6 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
@@ -103,6 +106,7 @@ class MyApp extends StatelessWidget {
 class OB2A extends StatelessWidget {
   final Widget? page;
   OB2A({this.page});
+
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<Authentification>();
@@ -114,7 +118,7 @@ class OB2A extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Chargement();
             if (!snapshot.hasData) {
-              firebaseUser.signAnonyme();
+              firebaseUser.connection('naimzeroab@gmail.com', '123456');
               //  userObs.value = FirebaseAuth.instance.currentUser;
               return Chargement();
             } else {
@@ -144,6 +148,7 @@ class OB2A extends StatelessWidget {
                     else {
                       var user = doc.data;
                       userProvider = Utilisateur.fromDoc(user);
+                      devise.value = userProvider.devise!;
                       // userProvider = Utilisateur(
                       //     nom: user['nom'],
                       //     image: user['image'],
@@ -152,6 +157,7 @@ class OB2A extends StatelessWidget {
                       //     admin: user['admin'],
                       //     boutique: user['boutique'],
                       //     uid: user.id);
+
                     }
 
                     //  print(profile);

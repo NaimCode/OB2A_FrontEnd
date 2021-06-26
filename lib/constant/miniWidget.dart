@@ -21,7 +21,7 @@ class Logo extends StatelessWidget {
             style: GoogleFonts.jost(
                 fontWeight: FontWeight.w700,
                 letterSpacing: 2,
-                color: Colors.grey[800],
+                color: Colors.indigo[900],
                 fontSize: 30)),
       ),
     );
