@@ -48,136 +48,107 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  bool _animate = false;
-  static bool _isStart = true;
-  @override
-  void initState() {
-    super.initState();
-    _isStart
-        ? Future.delayed(Duration(milliseconds: 300), () {
-            setState(() {
-              _animate = true;
-              // _isStart = false;
-            });
-          })
-        : _animate = true;
-  }
-
   @override
   Widget build(BuildContext context) {
     var isMobile = MediaQuery.of(context).size.width < 800;
 
-    return AnimatedOpacity(
-      duration: Duration(milliseconds: 1300),
-      opacity: _animate ? 1 : 0,
-      curve: Curves.elasticOut,
-      child: AnimatedPadding(
-          duration: Duration(milliseconds: 1300),
-          padding: _animate
-              ? const EdgeInsets.all(4.0)
-              : const EdgeInsets.only(top: 10),
-          child: Container(
-              child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
+    return Container(
+        child: Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+      children: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: sColorLight,
+                //   gradient: LinearGradient(
+                // begin: Alignment.bottomCenter,
+                // end: Alignment.topCenter,
+                // colors: [Colors.transparent, sColorLight],
+                // )
+              ),
+              height:
+                  isMobile ? null : MediaQuery.of(context).size.height * 0.7,
+              child: Wrap(
                 children: [
                   Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: sColorLight,
-                      //   gradient: LinearGradient(
-                      // begin: Alignment.bottomCenter,
-                      // end: Alignment.topCenter,
-                      // colors: [Colors.transparent, sColorLight],
-                      // )
-                    ),
                     height: isMobile
                         ? null
-                        : MediaQuery.of(context).size.height * 0.7,
-                    child: Wrap(
+                        : MediaQuery.of(context).size.height * (0.7),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 20 : 50,
+                      vertical: isMobile ? 40 : 0,
+                    ),
+                    width: isMobile
+                        ? MediaQuery.of(context).size.width
+                        : MediaQuery.of(context).size.width * 0.5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: isMobile
+                          ? CrossAxisAlignment.center
+                          : CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          height: isMobile
-                              ? null
-                              : MediaQuery.of(context).size.height * (0.7),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isMobile ? 20 : 50,
-                            vertical: isMobile ? 40 : 0,
-                          ),
-                          width: isMobile
-                              ? MediaQuery.of(context).size.width
-                              : MediaQuery.of(context).size.width * 0.5,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: isMobile
-                                ? CrossAxisAlignment.center
-                                : CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'NOUVELLE EDITION NIKE 2021',
-                                style: GoogleFonts.jost(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black),
-                                textAlign: isMobile
-                                    ? TextAlign.center
-                                    : TextAlign.left,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                'Acheter dès maintenant avant la rupture du stock',
-                                style: GoogleFonts.jost(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w400,
-                                    color: pColorLight),
-                                textAlign: isMobile
-                                    ? TextAlign.center
-                                    : TextAlign.left,
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              ElevatedButton(
-                                  style:
-                                      ElevatedButton.styleFrom(primary: pColor),
-                                  onPressed: () {
-                                    Get.toNamed('/produit/basket-homme-rouge');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text('Acheter',
-                                        style: GoogleFonts.jost(
-                                            fontWeight: FontWeight.w200,
-                                            color: Colors.white,
-                                            fontSize: 25)),
-                                  ))
-                            ],
-                          ),
+                        Text(
+                          'NOUVELLE EDITION NIKE 2021',
+                          style: GoogleFonts.jost(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black),
+                          textAlign:
+                              isMobile ? TextAlign.center : TextAlign.left,
                         ),
-                        Container(
-                          height: isMobile
-                              ? null
-                              : MediaQuery.of(context).size.height * (0.7),
-                          width: isMobile
-                              ? MediaQuery.of(context).size.width
-                              : MediaQuery.of(context).size.width * 0.5,
-                          child: Image.asset(
-                            'images/heroImage.png',
-                            fit: BoxFit.contain,
-                          ),
-                        )
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Acheter dès maintenant avant la rupture du stock',
+                          style: GoogleFonts.jost(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: pColorLight),
+                          textAlign:
+                              isMobile ? TextAlign.center : TextAlign.left,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: pColor),
+                            onPressed: () {
+                              Get.toNamed('/produit/basket-homme-rouge');
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Acheter',
+                                  style: GoogleFonts.jost(
+                                      fontWeight: FontWeight.w200,
+                                      color: Colors.white,
+                                      fontSize: 25)),
+                            ))
                       ],
                     ),
                   ),
+                  Container(
+                    height: isMobile
+                        ? null
+                        : MediaQuery.of(context).size.height * (0.7),
+                    width: isMobile
+                        ? MediaQuery.of(context).size.width
+                        : MediaQuery.of(context).size.width * 0.5,
+                    child: Image.asset(
+                      'images/heroImage.png',
+                      fit: BoxFit.contain,
+                    ),
+                  )
                 ],
               ),
-            ],
-          ))),
-    );
+            ),
+          ],
+        ),
+      ],
+    ));
   }
 }
 

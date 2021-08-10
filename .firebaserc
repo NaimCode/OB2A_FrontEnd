@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "ob2a-21ddc"
+    "ob2a-shopping": "o-b2a-c5c02",
+    "default": "o-b2a-c5c02"
   }
 }

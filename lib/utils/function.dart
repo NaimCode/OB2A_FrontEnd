@@ -114,15 +114,15 @@ String getDevisePrice(double prix, String devise) {
   double p = prix;
   switch (devise) {
     case 'Euro':
-      return '€${prix.toStringAsFixed(2)}';
+      return '${prix.toStringAsFixed(2)}€';
     case 'Dollar':
-      return '\$${(prix * e_d).toStringAsFixed(2)}';
+      return '${(prix * e_d).toStringAsFixed(2)}\$';
     case 'FCFA':
       prix = p * e_f;
       prix = prix / 100;
       prix = prix.ceilToDouble() * 100;
       return '${prix}FCFA';
     default:
-      return '€$prix';
+      return '$prix€';
   }
 }

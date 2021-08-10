@@ -228,7 +228,7 @@ class SettingsButton extends StatelessWidget {
   final Utilisateur user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return IconButton(
         tooltip: 'Pamamètre',
         onPressed: () {
@@ -325,7 +325,7 @@ class SettingsButton extends StatelessWidget {
                             Get.toNamed('/inscription');
                         },
                         onMenuButtonToggle: (bool isToggle) {
-                          if (!isToggle) Get.back();
+                          if (!isToggle) Navigator.pop(_);
                         },
                       ),
                     ],

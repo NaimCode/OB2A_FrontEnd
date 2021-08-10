@@ -12,6 +12,7 @@ import 'package:ob2a/specialPages/connexion.dart';
 import 'package:ob2a/specialPages/inscription.dart';
 import 'package:ob2a/state/globalVariable.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'body.dart';
 import 'constant/miniWidget.dart';
@@ -28,7 +29,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
+  setPathUrlStrategy();
   runApp(MyApp());
 }
 
@@ -36,77 +37,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-          Provider<Authentification>(
-            create: (_) => Authentification(FirebaseAuth.instance),
-          ),
-          // ignore: missing_required_param
-          StreamProvider(
-            create: (conext) =>
-                context.read<Authentification>().authStateChanges,
-            initialData: null,
-          ),
-        ],
-        child: GetMaterialApp(
-          initialRoute: '/',
-          unknownRoute: GetPage(
-              name: '/erreur404', page: () => Body(content: UnknownPage())),
-          getPages: [
-            GetPage(
-                name: '/',
-                page: () => OB2A(page: Body(content: Accueil())),
-                transition: Transition.cupertino),
-            GetPage(
-                name: '/compte/:param',
-                page: () => OB2A(page: Profil()),
-                transition: Transition.cupertino),
-            GetPage(
-                name: '/pages/faq',
-                page: () => OB2A(page: Body(content: FAQ())),
-                transition: Transition.cupertino),
-            GetPage(
-                name: '/pages/contact',
-                page: () => OB2A(page: Body(content: Contact())),
-                transition: Transition.cupertino),
-            GetPage(
-              name: '/produit/:produit',
-              page: () => OB2A(page: Body(content: ProduitDetail())),
-            ),
-            GetPage(
-                name: '/connexion',
-                page: () => Connexion(),
-                transition: Transition.cupertinoDialog),
-            GetPage(
-                name: '/inscription',
-                page: () => Inscription(),
-                transition: Transition.cupertinoDialog),
-            GetPage(
-                name: '/produit',
-                page: () => OB2A(page: Body(content: Produits())),
-                transition: Transition.cupertino),
-            GetPage(
-                name: '/produits/:slug',
-                page: () => OB2A(page: Body(content: CategoriePage())),
-                transition: Transition.cupertino),
-            GetPage(
-                name: '/test',
-                page: () => Test(),
-                transition: Transition.cupertino),
-          ],
-          title: 'O\'B2A',
-          theme: ThemeData(
-            primarySwatch: Colors.grey,
-          ),
-          debugShowCheckedModeBanner: false,
-        ));
+    return MultiProvider(providers: [
+      Provider<Authentification>(
+        create: (_) => Authentification(FirebaseAuth.instance),
+      ),
+      // ignore: missing_required_param
+      StreamProvider(
+        create: (conext) => context.read<Authentification>().authStateChanges,
+        initialData: null,
+      ),
+    ], child: MaterialApp(debugShowCheckedModeBanner: false, home: OB2A()));
   }
 }
 
 class OB2A extends StatelessWidget {
-  final Widget? page;
-  OB2A({this.page});
-
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<Authentification>();
@@ -163,7 +107,62 @@ class OB2A extends StatelessWidget {
                     //  print(profile);
                     return ProxyProvider0<Utilisateur>(
                       update: (_, __) => userProvider!,
-                      child: page,
+                      child: GetMaterialApp(
+                        initialRoute: '/',
+                        unknownRoute: GetPage(
+                            name: '/erreur404',
+                            page: () => Body(content: UnknownPage())),
+                        getPages: [
+                          GetPage(
+                              name: '/',
+                              page: () => Body(content: Accueil()),
+                              transition: Transition.cupertino),
+                          GetPage(
+                              title: 'Profil',
+                              name: '/compte/:param',
+                              page: () => Profil(),
+                              transition: Transition.cupertino),
+                          GetPage(
+                              title: 'FAQ',
+                              name: '/pages/faq',
+                              page: () => Body(content: FAQ()),
+                              transition: Transition.cupertino),
+                          GetPage(
+                              title: 'Contact',
+                              name: '/pages/contact',
+                              page: () => Body(content: Contact()),
+                              transition: Transition.cupertino),
+                          GetPage(
+                            name: '/produit/:produit',
+                            page: () => Body(content: ProduitDetail()),
+                          ),
+                          GetPage(
+                              name: '/connexion',
+                              page: () => Connexion(),
+                              transition: Transition.cupertinoDialog),
+                          GetPage(
+                              name: '/inscription',
+                              page: () => Inscription(),
+                              transition: Transition.cupertinoDialog),
+                          GetPage(
+                              name: '/produit',
+                              page: () => Body(content: Produits()),
+                              transition: Transition.cupertino),
+                          GetPage(
+                              name: '/produits/:slug',
+                              page: () => Body(content: CategoriePage()),
+                              transition: Transition.cupertino),
+                          GetPage(
+                              name: '/test',
+                              page: () => Test(),
+                              transition: Transition.cupertino),
+                        ],
+                        title: 'O\'B2A',
+                        theme: ThemeData(
+                          primarySwatch: Colors.grey,
+                        ),
+                        debugShowCheckedModeBanner: false,
+                      ),
                     );
                   });
             }
