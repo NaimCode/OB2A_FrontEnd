@@ -61,31 +61,40 @@ class CardProduct extends StatelessWidget {
             e['enPromotion'] == null ||
                     e['prixPromotion'] == null ||
                     e['enPromotion'] == false
-                ? SelectableText(
-                    // '\$${e['prix']}'
-                    getDevisePrice(
-                        e['prix'], isUser(user) ? user.devise : devise.value),
-                    style: GoogleFonts.jost(fontSize: 18),
-                    textAlign: TextAlign.left,
+                ? BlocBuilder<SettingsCubit, SettingsState>(
+                    builder: (context, state) {
+                      return SelectableText(
+                        // '$${e['prix']}'
+                        getDevisePrice(e['prix'], state.device!),
+                        style: GoogleFonts.jost(fontSize: 18),
+                        textAlign: TextAlign.left,
+                      );
+                    },
                   )
                 : Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      SelectableText(
-                        getDevisePrice(e['prix'],
-                            isUser(user) ? user.devise : devise.value),
-                        style: GoogleFonts.jost(
-                            fontSize: 14, color: pColor.withOpacity(0.4)),
-                        textAlign: TextAlign.left,
+                      BlocBuilder<SettingsCubit, SettingsState>(
+                        builder: (context, state) {
+                          return SelectableText(
+                            getDevisePrice(e['prix'], state.device!),
+                            style: GoogleFonts.jost(
+                                fontSize: 14, color: pColor.withOpacity(0.4)),
+                            textAlign: TextAlign.left,
+                          );
+                        },
                       ),
                       SizedBox(
                         width: isMobile ? 3 : 10,
                       ),
-                      SelectableText(
-                        getDevisePrice(e['prixPromotion'],
-                            isUser(user) ? user.devise : devise.value),
-                        style: GoogleFonts.jost(fontSize: 18),
-                        textAlign: TextAlign.left,
+                      BlocBuilder<SettingsCubit, SettingsState>(
+                        builder: (context, state) {
+                          return SelectableText(
+                            getDevisePrice(e['prixPromotion'], state.device!),
+                            style: GoogleFonts.jost(fontSize: 18),
+                            textAlign: TextAlign.left,
+                          );
+                        },
                       ),
                       SizedBox(
                         width: isMobile ? 3 : 10,
@@ -260,12 +269,8 @@ class SettingsButton extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Flexible(
-                                        child: isUser(user)
-                                            ? Text(user.devise!,
-                                                overflow: TextOverflow.ellipsis)
-                                            : Obx(() => Text(devise.value,
-                                                overflow:
-                                                    TextOverflow.ellipsis))),
+                                        child: Text(state.device!,
+                                            overflow: TextOverflow.ellipsis)),
                                     const SizedBox(
                                       width: 12,
                                       height: 17,
@@ -301,13 +306,8 @@ class SettingsButton extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Flexible(
-                                          child: isUser(user)
-                                              ? Text(user.devise!,
-                                                  overflow:
-                                                      TextOverflow.ellipsis)
-                                              : Obx(() => Text(devise.value,
-                                                  overflow:
-                                                      TextOverflow.ellipsis))),
+                                          child: Text(state.device!,
+                                              overflow: TextOverflow.ellipsis)),
                                       const SizedBox(
                                         width: 12,
                                         height: 17,
