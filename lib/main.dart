@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as fb;
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:ob2a/constant/color.dart';
+import 'package:ob2a/cubit/settings_cubit.dart';
 import 'package:ob2a/pages/categorie.dart';
 import 'package:ob2a/pages/contact.dart';
 import 'package:ob2a/pages/produitDetail.dart';
@@ -24,12 +28,16 @@ import 'pages/unknown.dart';
 import 'service/authentification.dart';
 import 'specialPages/compte.dart';
 import 'test.dart';
+import 'package:path/path.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
   setPathUrlStrategy();
+  HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: HydratedStorage.webStorageDirectory);
   runApp(MyApp());
 }
 
@@ -37,16 +45,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      Provider<Authentification>(
-        create: (_) => Authentification(FirebaseAuth.instance),
-      ),
-      // ignore: missing_required_param
-      StreamProvider(
-        create: (conext) => context.read<Authentification>().authStateChanges,
-        initialData: null,
-      ),
-    ], child: MaterialApp(debugShowCheckedModeBanner: false, home: OB2A()));
+    return fb.BlocProvider<SettingsCubit>(
+      create: (context) => SettingsCubit(),
+      child: MultiProvider(providers: [
+        Provider<Authentification>(
+          create: (_) => Authentification(FirebaseAuth.instance),
+        ),
+        // ignore: missing_required_param
+        StreamProvider(
+          create: (conext) => context.read<Authentification>().authStateChanges,
+          initialData: null,
+        ),
+      ], child: MaterialApp(debugShowCheckedModeBanner: false, home: OB2A())),
+    );
   }
 }
 
