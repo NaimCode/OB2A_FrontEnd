@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as fb;
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart' as h;
 import 'package:ob2a/constant/color.dart';
 import 'package:ob2a/cubit/settings_cubit.dart';
 import 'package:ob2a/pages/categorie.dart';
@@ -28,16 +28,14 @@ import 'pages/unknown.dart';
 import 'service/authentification.dart';
 import 'specialPages/compte.dart';
 import 'test.dart';
-import 'package:path/path.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
   setPathUrlStrategy();
-  HydratedBloc.storage = await HydratedStorage.build(
-      storageDirectory: HydratedStorage.webStorageDirectory);
+  h.HydratedBloc.storage = await h.HydratedStorage.build(
+      storageDirectory: h.HydratedStorage.webStorageDirectory);
   runApp(MyApp());
 }
 
